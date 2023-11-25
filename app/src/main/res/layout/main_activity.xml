@@ -40,9 +40,6 @@
         android:layout_height="60dp"
         android:layout_alignTop="@id/recent"
         android:layout_alignParentEnd="true"
-        android:layout_marginLeft="0dp"
-        android:layout_marginTop="3dp"
-        android:layout_marginEnd="-3dp"
         android:layout_toRightOf="@id/recent"
         android:text="本地"></Button>
 
@@ -59,5 +56,11 @@
         android:layout_marginBottom="0dp"
         android:layout_toRightOf="@id/Like"
         android:text="全部"></Button>
+
+    <FrameLayout
+        android:id="@+id/FrameLayout_main"
+        android:layout_width="match_parent"
+        android:layout_height="55dp"
+        android:layout_alignParentBottom="true"/>
 
 </RelativeLayout>

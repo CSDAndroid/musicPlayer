@@ -1,24 +1,28 @@
 package com.example.myapplication
 
 import MusicDatabase
-import android.content.Context
+import MusicListAdapter
+import android.content.Intent
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
-import android.widget.TextView
+import android.widget.Button
 import androidx.activity.ComponentActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 
-
 class MusicListActivity : ComponentActivity() {
     private lateinit var musicListView:RecyclerView
+    private lateinit var back1:Button
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.music_list_activity)
         musicListView=findViewById(R.id.MusicListView)
+        back1=findViewById((R.id.back1))
+
+        back1.setOnClickListener{
+            val intent=Intent(this,MainActivity::class.java)
+            startActivity(intent)
+        }
 
         val musicList=getMusicList()
 
@@ -36,7 +40,7 @@ class MusicListActivity : ComponentActivity() {
 
         val cursor=db.query(
             MusicDatabase.TABLE_NAME,
-            null,
+            arrayOf(MusicDatabase.COLUMN_NAME,MusicDatabase.COLUMN_ID,MusicDatabase.COLUMN_ARTIST,MusicDatabase.COLUMN_DURATION,MusicDatabase.COLUMN_DATA,MusicDatabase.COLUMN_MIMETYPE,MusicDatabase.COLUMN_SIZE,MusicDatabase.COLUMN_ALBUM_ID),
             null,
             null,
             null,
@@ -52,9 +56,10 @@ class MusicListActivity : ComponentActivity() {
             val data = cursor.getString(cursor.getColumnIndexOrThrow(MusicDatabase.COLUMN_DATA))
             val mimeType = cursor.getString(cursor.getColumnIndexOrThrow(MusicDatabase.COLUMN_MIMETYPE))
             val size = cursor.getLong(cursor.getColumnIndexOrThrow(MusicDatabase.COLUMN_SIZE))
+            val albumId=cursor.getLong(cursor.getColumnIndexOrThrow(MusicDatabase.COLUMN_ALBUM_ID))
 
             if (name != null && artist != null && data != null && mimeType != null) {
-                val music = Music(name, artist, id, data, duration, size, mimeType)
+                val music = Music(name, artist, id, data, duration, size, mimeType,albumId)
                 musicList.add(music)
             }
         }
@@ -66,25 +71,4 @@ class MusicListActivity : ComponentActivity() {
 
 data class Music(
     val name: String, val artist: String, val id: Int, val data: String, val duration: Int, val size: Long, val mimeType: String,
-    var isCollected:Boolean=false)
-
-class MusicListAdapter(private val musicList: List<Music>,private val context: Context):RecyclerView.Adapter<MusicListAdapter.ViewHolder>(){
-
-    inner class ViewHolder(view: View):RecyclerView.ViewHolder(view){
-        val musicName: TextView =view.findViewById(R.id.musicName)
-        val artistName1: TextView =view.findViewById(R.id.artistName1)
-    }
-
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val view= LayoutInflater.from(parent.context).inflate(R.layout.music_list_item_activity,parent,false)
-        return ViewHolder(view)
-    }
-
-    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val music=musicList[position]
-        holder.musicName.text=music.name
-        holder.artistName1.text=music.artist
-    }
-
-    override fun getItemCount()=musicList.size
-}
+    val albumId:Long,var isCollected:Boolean=true)
