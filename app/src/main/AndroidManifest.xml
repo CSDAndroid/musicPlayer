@@ -15,6 +15,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.MyApplication"
         tools:targetApi="31">
+
         <activity
             android:name=".MusicListActivity"
             android:exported="true"

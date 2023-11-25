@@ -43,4 +43,10 @@
         android:layout_height="630dp"
         android:layout_below="@id/LinearLayout1"/>
 
+    <FrameLayout
+        android:id="@+id/FrameLayout_music"
+        android:layout_width="match_parent"
+        android:layout_height="55dp"
+        android:layout_below="@id/MusicListView"/>
+
 </RelativeLayout>

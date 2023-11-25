@@ -5,10 +5,40 @@
     android:layout_height="match_parent"
     tools:context=".MusicPlayerFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/onClickSongActivity"
+            android:layout_width="0dp"
+            android:layout_height="60dp"
+            android:layout_weight="10"
+            android:text="文本款"/>
+
+        <Button
+            android:id="@+id/onClickLastSong"
+            android:layout_width="0dp"
+            android:layout_height="60dp"
+            android:layout_weight="3"
+            android:text="上"/>
+
+        <Button
+            android:id="@+id/onClickBroadcast"
+            android:layout_width="0dp"
+            android:layout_height="60dp"
+            android:layout_weight="3"
+            android:text="放"/>
+
+        <Button
+            android:id="@+id/onClickNextSong"
+            android:layout_width="0dp"
+            android:layout_height="60dp"
+            android:layout_weight="3"
+            android:text="下"/>
+
+
+    </LinearLayout>
 
 </FrameLayout>
