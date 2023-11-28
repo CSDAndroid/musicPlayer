@@ -5,6 +5,8 @@
     android:layout_height="match_parent"
     tools:context=".SongListActivity">
 
+    <include layout="@layout/music_player"/>
+
     <LinearLayout
         android:id="@+id/LinearLayout"
         android:layout_width="match_parent"
@@ -42,12 +44,9 @@
         android:id="@+id/songListView"
         android:layout_width="match_parent"
         android:layout_height="630dp"
-        android:layout_below="@id/LinearLayout"/>
-
-    <FrameLayout
-        android:id="@+id/FrameLayout_song"
-        android:layout_width="match_parent"
-        android:layout_height="55dp"
-        android:layout_below="@id/songListView"/>
+        android:layout_below="@id/LinearLayout"
+        android:layout_alignParentStart="true"
+        android:layout_marginStart="-19dp"
+        android:layout_marginTop="-2dp" />
 
 </RelativeLayout>

@@ -1,11 +1,6 @@
+
 import android.content.ContentResolver
-import android.content.ContentUris
-import android.graphics.Bitmap
-import android.graphics.BitmapFactory
-import android.net.Uri
 import android.provider.MediaStore
-import android.util.Log
-import com.example.myapplication.Song
 
 class SongRetriever(private val contentResolver: ContentResolver){
 
@@ -45,9 +40,7 @@ class SongRetriever(private val contentResolver: ContentResolver){
                 val data=cursor.getString(dataColumn)
                 val albumId=cursor.getLong(albumIdColumn)
 
-                val albumArtBitmap=getAlbumArtBitmap(contentResolver,albumId)
-
-                val song= Song(title,artist,id,duration,size,mimeType,data,albumId,albumArtBitmap)
+                val song= Song(title,artist,id,duration,size,mimeType,data,albumId)
 
                 songList.add(song)
             }
@@ -55,23 +48,4 @@ class SongRetriever(private val contentResolver: ContentResolver){
         }
         return songList
     }
-    //获取歌曲图片资源
-    private fun getAlbumArtBitmap(contentResolver: ContentResolver, albumId: Long): Bitmap? {
-        val albumArtUri = Uri.parse("content://media/external/audio/albumart")
-        val uri = ContentUris.withAppendedId(albumArtUri, albumId)
-        var bitmap: Bitmap? = null
-        try {
-            val parcelFileDescriptor = contentResolver.openFileDescriptor(uri, "r")
-            if (parcelFileDescriptor != null) {
-                val fileDescriptor = parcelFileDescriptor.fileDescriptor
-                bitmap = BitmapFactory.decodeFileDescriptor(fileDescriptor)
-                parcelFileDescriptor.close()
-                Log.i("tag3","successful")
-            }
-        } catch (e: Exception) {
-            e.printStackTrace()
-        }
-        return bitmap
-    }
-
 }
