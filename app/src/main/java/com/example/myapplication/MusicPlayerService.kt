@@ -1,10 +1,8 @@
 package com.example.myapplication
 
-import Song
 import android.app.Service
 import android.content.Intent
 import android.media.MediaPlayer
-import android.net.Uri
 import android.os.Binder
 import android.os.Bundle
 import android.os.IBinder
@@ -45,20 +43,20 @@ class MusicPlayerService : Service() {
     }
 
    inner class MusicControl():Binder(){
-       fun play(position:Int,songList:List<Song>){
-           val uri= Uri.parse(songList[position].data)
-           try {
-               player?.reset()
-               MediaPlayer().setDataSource(applicationContext,uri)
-               player?.start()
-               addTimer()
-           }catch (e:Exception){
-               e.printStackTrace()
-           }
+       fun play(i:Int){
+
        }
 
        fun pause(){
            player?.pause()
+       }
+
+       fun next(){
+
+       }
+
+       fun prev(){
+
        }
 
        fun seekTo(progress:Int){
