@@ -1,3 +1,4 @@
+
 import android.content.ContentValues
 import android.content.Context
 import android.view.LayoutInflater
@@ -13,12 +14,35 @@ class SongListAdapter(private val songList: List<Song>, context: Context): Recyc
     private val dbHelper=MusicDatabase(context)
     val db=dbHelper.writableDatabase
     private val sharedPreferences=context.getSharedPreferences("isCollected", Context.MODE_PRIVATE)
+    private val sharedPreference=context.getSharedPreferences("isPlaying",Context.MODE_PRIVATE)
 
     inner class ViewHolder(view: View): RecyclerView.ViewHolder(view){
+        private val playButton: Button =view.findViewById(R.id.play_button)
         val songName: TextView =view.findViewById(R.id.songName)
         val artistName: TextView =view.findViewById(R.id.artistName)
-        val playButton: Button =view.findViewById(R.id.play_button)
         val likeButton: Button =itemView.findViewById(R.id.MyLike_button)
+        init {
+            playButton.setOnClickListener{
+                val position=bindingAdapterPosition
+                if(position!=RecyclerView.NO_POSITION){
+                    val song=songList[position]
+                    var isPlaying=sharedPreference.getBoolean("isPlaying_${song.id}",false)
+                    if(isPlaying){
+                        playButton.setBackgroundResource(R.drawable.ic_pause)
+                        val editor=sharedPreference.edit()
+                        editor.putBoolean("isPlaying_${song.id}",false)
+                        editor.apply()
+                    }else{
+                        playButton.setBackgroundResource(R.drawable.ic_play)
+                        val editor=sharedPreference.edit()
+                        editor.putBoolean("isPlaying_${song.id}",true)
+                        editor.apply()
+                    }
+                    isPlaying=!isPlaying
+                }
+            }
+        }
+
         init {
             likeButton.setOnClickListener{
                 val position = bindingAdapterPosition
