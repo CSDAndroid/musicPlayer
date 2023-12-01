@@ -28,12 +28,12 @@ class SongListAdapter(private val songList: List<Song>, context: Context): Recyc
                     val song=songList[position]
                     var isPlaying=sharedPreference.getBoolean("isPlaying_${song.id}",false)
                     if(isPlaying){
-                        playButton.setBackgroundResource(R.drawable.ic_pause)
+                        playButton.setBackgroundResource(R.drawable.ic_play)
                         val editor=sharedPreference.edit()
                         editor.putBoolean("isPlaying_${song.id}",false)
                         editor.apply()
                     }else{
-                        playButton.setBackgroundResource(R.drawable.ic_play)
+                        playButton.setBackgroundResource(R.drawable.ic_pause)
                         val editor=sharedPreference.edit()
                         editor.putBoolean("isPlaying_${song.id}",true)
                         editor.apply()
