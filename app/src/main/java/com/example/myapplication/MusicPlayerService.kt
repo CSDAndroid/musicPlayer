@@ -4,6 +4,7 @@ import android.app.Service
 import android.content.Intent
 import android.media.MediaPlayer
 import android.os.Binder
+import android.os.Bundle
 import android.os.IBinder
 import java.util.Timer
 import java.util.TimerTask
@@ -29,8 +30,15 @@ class MusicPlayerService : Service() {
                     if(player==null)return
                     val duration=player!!.duration
                     val currentPosition=player!!.currentPosition
+                    val msg=MusicPlayer.handler.obtainMessage()
+                    val bundle=Bundle()
+                    bundle.putInt("duration",duration)
+                    bundle.putInt("currentPosition",currentPosition)
+                    msg.data=bundle
+                    MusicPlayer.handler.handleMessage(msg)
                 }
             }
+            timer!!.schedule(task,5,500)
         }
     }
 
@@ -43,11 +51,11 @@ class MusicPlayerService : Service() {
            player?.pause()
        }
 
-       fun nextOnClick(){
+       fun next(){
 
        }
 
-       fun prevOnClick(){
+       fun prev(){
 
        }
 
@@ -63,5 +71,4 @@ class MusicPlayerService : Service() {
         player!!.release()
         player=null
     }
-
 }
