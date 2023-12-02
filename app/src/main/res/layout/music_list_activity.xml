@@ -5,8 +5,6 @@
     android:layout_height="match_parent"
     tools:context=".SongListActivity">
 
-    <include layout="@layout/music_player"/>
-
     <LinearLayout
         android:id="@+id/LinearLayout1"
         android:layout_width="match_parent"
@@ -42,7 +40,12 @@
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/MusicListView"
         android:layout_width="match_parent"
-        android:layout_height="630dp"
+        android:layout_height="550dp"
         android:layout_below="@id/LinearLayout1"/>
+
+    <com.example.myapplication.MusicPlayer
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/MusicListView"/>
 
 </RelativeLayout>

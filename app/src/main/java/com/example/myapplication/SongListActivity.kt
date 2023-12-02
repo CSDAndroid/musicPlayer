@@ -31,17 +31,5 @@ class SongListActivity : ComponentActivity() {
         songListView.layoutManager = layoutManager
         val adapter = SongListAdapter(songList, this)
         songListView.adapter = adapter
-
-//        val musicPlayer=findViewById<MusicPlayer>(R.id.musicPlayer)
-//        val position=getPosition(null, songList)
-//        if (position != null) {
-//            musicPlayer.getSongList(songList,position)
-//        }
-//        musicPlayer.init()
     }
-
-//    companion object {
-//        fun getPosition(position: Int?, songList:List<Song>): Int? {
-//            return position
-//        }
 }

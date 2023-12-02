@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.example.myapplication.MusicPlayer
 import com.example.myapplication.R
 
 class SongListAdapter(private val songList: List<Song>, context: Context): RecyclerView.Adapter<SongListAdapter.ViewHolder>(){
@@ -32,6 +33,8 @@ class SongListAdapter(private val songList: List<Song>, context: Context): Recyc
                         val editor=sharedPreference.edit()
                         editor.putBoolean("isPlaying_${song.id}",false)
                         editor.apply()
+                        MusicPlayer.MusicData.currentSongList=songList
+                        MusicPlayer.MusicData.currentPosition=position
                     }else{
                         playButton.setBackgroundResource(R.drawable.ic_pause)
                         val editor=sharedPreference.edit()
