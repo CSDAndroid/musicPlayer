@@ -76,6 +76,8 @@ class MusicPlayer(context: Context, attrs: AttributeSet?):RelativeLayout(context
     }
 
     private fun init() {
+        name!!.text= position?.let { songList?.get(it)?.name }
+        artist!!.text= position?.let { songList?.get(it)?.artist }
         sb!!.setOnSeekBarChangeListener(object :
             SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(p0: SeekBar?, p1: Int, p2: Boolean) {}
@@ -84,7 +86,7 @@ class MusicPlayer(context: Context, attrs: AttributeSet?):RelativeLayout(context
                 val progress = sb!!.progress
                 musicControl?.seekTo(progress)
             }
-        })
+        }  )
 
         val sharedPreference = context.getSharedPreferences("isPlaying", Context.MODE_PRIVATE)
 
@@ -103,13 +105,18 @@ class MusicPlayer(context: Context, attrs: AttributeSet?):RelativeLayout(context
                 songList?.let { it1 -> musicControl?.play(position!!, it1) }
             }
             position = position!! - 1
+            name!!.text= position?.let { songList?.get(it)?.name }
+            artist!!.text= position?.let { songList?.get(it)?.artist }
             songList?.let { it1 -> musicControl?.play(position!!, it1) }
         }
 
         next!!.setOnClickListener {
             position = position!! + 1
+            name!!.text= position?.let { songList?.get(it)?.name }
+            artist!!.text= position?.let { songList?.get(it)?.artist }
             songList?.let { it1 -> musicControl?.play(position!!, it1) }
         }
+
     }
 
     companion object {

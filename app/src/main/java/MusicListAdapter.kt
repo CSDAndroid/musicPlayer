@@ -4,10 +4,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
-import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.example.myapplication.Music
 import com.example.myapplication.R
 
 class MusicListAdapter(private val musicList: List<Music>, context: Context): RecyclerView.Adapter<MusicListAdapter.ViewHolder>(){
@@ -19,7 +17,6 @@ class MusicListAdapter(private val musicList: List<Music>, context: Context): Re
     inner class ViewHolder(view: View): RecyclerView.ViewHolder(view){
         val musicName: TextView =view.findViewById(R.id.musicName)
         val artistName1: TextView =view.findViewById(R.id.artistName1)
-        val picture1: ImageView =view.findViewById(R.id.picture1)
 
         val likeButton1: Button =itemView.findViewById(R.id.MyLike_button1)
         init {
