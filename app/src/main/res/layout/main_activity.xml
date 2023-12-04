@@ -11,15 +11,14 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="用户名"
-        android:drawableLeft="@mipmap/ic_launcher_round"/>
+        android:drawableStart="@mipmap/ic_launcher_round"/>
 
     <Button
         android:id="@+id/Like"
         android:layout_width="wrap_content"
         android:layout_height="125dp"
         android:text="我喜欢的"
-        android:layout_gravity="left"
-        android:drawableLeft="@drawable/heart"
+        android:drawableStart="@drawable/heart"
         android:layout_below="@id/user"/>
 
     <Button
@@ -28,7 +27,6 @@
         android:layout_height="60dp"
         android:layout_alignTop="@id/Like"
         android:layout_toEndOf="@+id/Like"
-        android:layout_toRightOf="@id/Like"
         android:text="最近"/>
 
     <Button
@@ -37,7 +35,7 @@
         android:layout_height="60dp"
         android:layout_alignTop="@id/recent"
         android:layout_alignParentEnd="true"
-        android:layout_toRightOf="@id/recent"
+        android:layout_toEndOf="@id/recent"
         android:text="本地"/>
 
     <Button
@@ -47,12 +45,12 @@
         android:layout_below="@id/recent"
         android:layout_alignBottom="@+id/Like"
         android:layout_alignParentEnd="true"
-        android:layout_toRightOf="@id/Like"
+        android:layout_toEndOf="@id/Like"
         android:text="全部"/>
 
-    <com.example.myapplication.MusicPlayer
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"/>
+<!--    <com.example.myapplication.MusicPlayer-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_alignParentBottom="true"/>-->
 
 </RelativeLayout>

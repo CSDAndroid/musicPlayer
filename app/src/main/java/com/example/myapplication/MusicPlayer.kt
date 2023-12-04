@@ -1,6 +1,6 @@
 package com.example.myapplication
 
-import MusicData
+import SongListAdapter
 import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
@@ -10,7 +10,6 @@ import android.os.IBinder
 import android.os.Looper
 import android.os.Message
 import android.util.AttributeSet
-import android.util.Log
 import android.view.LayoutInflater
 import android.widget.Button
 import android.widget.RelativeLayout
@@ -29,17 +28,15 @@ class MusicPlayer(context: Context, attrs: AttributeSet?):RelativeLayout(context
     private var next: Button? = null
 
     private var musicControl: MusicPlayerService.MusicControl? = null
-
     private val serviceConnection = object : ServiceConnection {
         override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
-            Log.d("o", "Service connected")
             musicControl = service as MusicPlayerService.MusicControl
         }
         override fun onServiceDisconnected(name: ComponentName?) {}
     }
 
-    private var songList=MusicData.currentSongList
-    private var position=MusicData.currentPosition
+    private var songList=SongListAdapter.MusicData.currentSongList
+    private var position=SongListAdapter.MusicData.currentPosition
 
     init {
         LayoutInflater.from(context).inflate(R.layout.music_player, this)
@@ -59,12 +56,14 @@ class MusicPlayer(context: Context, attrs: AttributeSet?):RelativeLayout(context
     }
 
     private fun init() {
-        play!!.setBackgroundResource(R.drawable.ic_pause)
-        name!!.text= position.let { songList[it].name }
-        artist!!.text= position.let { songList[it].artist }
-        position.let { it1 -> songList.let { it2 -> musicControl?.play(it1, it2) } }
+        if(position!=null) {
+            name!!.text = position?.let { songList?.get(it)?.name }
+            artist!!.text = position?.let { songList?.get(it)?.artist }
+            songList?.let { musicControl?.play(position!!, it) }
+            play!!.setBackgroundResource(R.drawable.ic_pause)
+        }
 
-        sb!!.setOnSeekBarChangeListener(object :
+        sb?.setOnSeekBarChangeListener(object :
             SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(p0: SeekBar?, p1: Int, p2: Boolean) {}
             override fun onStartTrackingTouch(p0: SeekBar?) {}
@@ -76,87 +75,42 @@ class MusicPlayer(context: Context, attrs: AttributeSet?):RelativeLayout(context
 
         val sharedPreference = context.getSharedPreferences("isPlaying", Context.MODE_PRIVATE)
 
-        play!!.setOnClickListener {
-            val song = position.let { it1 -> songList[it1] }
-            val isPlaying = sharedPreference.getBoolean("isPlaying_${song.id}", false)
+        play?.setOnClickListener {
+            val song = position?.let { it1 -> songList?.get(it1) }
+            val isPlaying = sharedPreference.getBoolean("isPlaying_${song?.id}", false)
             if (isPlaying) {
                 play!!.setBackgroundResource(R.drawable.ic_play)
+                val editor=sharedPreference.edit()
+                editor.putBoolean("isPlaying_${song?.id}",false)
+                editor.apply()
                 musicControl?.pause()
             } else {
                 play!!.setBackgroundResource(R.drawable.ic_pause)
-                position.let { it1 -> songList.let { it2 -> musicControl?.play(it1, it2) } }
+                songList?.let { it1 -> position?.let { it2 -> musicControl!!.play(it2, it1) } }
+                val editor=sharedPreference.edit()
+                editor.putBoolean("isPlaying_${song?.id}",true)
+                editor.apply()
             }
         }
 
-        prev!!.setOnClickListener {
+        prev?.setOnClickListener {
             if (position == 0) {
-                songList.let { it1 -> musicControl?.play(position, it1) }
+                songList?.let { it1 -> musicControl?.play(position!!, it1) }
             }else {
-                position -= 1
-                name!!.text = position.let { songList[it].name }
-                artist!!.text = position.let { songList[it].artist }
-                songList.let { it1 -> musicControl?.play(position, it1) }
+                position = position?.minus(1)
+                name!!.text = position?.let { songList?.get(it)?.name }
+                artist!!.text = position?.let { songList?.get(it)?.artist }
+                songList?.let { it1 -> position?.let { it2 -> musicControl?.play(it2, it1) } }
             }
         }
 
-        next!!.setOnClickListener {
-            if(position>songList.size-1){
-                position=0
-                songList.let { it1 -> musicControl?.play(position, it1) }
-            }else {
-                position += 1
-                name!!.text = position.let { songList[it].name }
-                artist!!.text = position.let { songList[it].artist }
-                songList.let { it1 -> musicControl?.play(position, it1) }
-            }
+        next?.setOnClickListener {
+            position = position?.plus(1)
+            name!!.text = position?.let { songList?.get(it)?.name }
+            artist!!.text = position?.let { songList?.get(it)?.artist }
+            songList?.let { it1 -> position?.let { it2 -> musicControl?.play(it2, it1) } }
         }
     }
-
-//        companion object {
-//        private var sb: SeekBar? = null
-//        private var tv_progress: TextView? = null
-//        private var tv_total: TextView? = null
-//
-//        var handler: Handler = object : Handler() {
-//            override fun handleMessage(msg: Message) {
-//                val bundle = msg.data
-//                val duration = bundle.getInt("duration")
-//                val currentPosition = bundle.getInt("currentPosition")
-//
-//                sb!!.max = duration
-//                sb!!.progress = currentPosition
-//
-//                val minute = duration / 1000 / 60
-//                val second = duration / 1000 % 60
-//                val strMinute=if(minute<10){
-//                    "0$minute"
-//                }else{
-//                    minute.toString()+""
-//                }
-//                val strSecond=if(second<10){
-//                    "0$second"
-//                }else{
-//                    second.toString()+""
-//                }
-//                tv_total!!.text="$strMinute:$strSecond"
-//
-//                val minute1 = currentPosition / 1000 / 60
-//                val second1 = currentPosition / 1000 % 60
-//                val strMinute1=if(minute1<10){
-//                    "0$minute1"
-//                }else{
-//                    minute1.toString()+""
-//                }
-//                val strSecond1=if(second1<10){
-//                    "0$second1"
-//                }else{
-//                    second1.toString()+""
-//                }
-//                tv_progress!!.text="$strMinute1:$strSecond1"
-//            }
-//        }
-//    }
-
 
     companion object {
         private lateinit var sbRef: WeakReference<SeekBar>

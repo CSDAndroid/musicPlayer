@@ -13,18 +13,18 @@
             android:id="@+id/tv_progress"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_above="@id/onClickBroadcast"
-            android:layout_alignParentLeft="true"
-            android:layout_marginLeft="10dp"
+            android:layout_alignTop="@id/image"
+            android:layout_alignParentStart="true"
+            android:layout_marginStart="10dp"
             android:text="00:00"/>
 
         <TextView
             android:id="@+id/tv_total"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_above="@id/onClickBroadcast"
+            android:layout_alignTop="@id/image"
             android:layout_alignParentEnd="true"
-            android:layout_marginRight="10dp"
+            android:layout_marginEnd="10dp"
             android:text="00:00"/>
 
         <ImageView
@@ -38,8 +38,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@id/SeekBar"
-            android:layout_toRightOf="@id/image"
-            android:layout_marginLeft="5dp"
+            android:layout_toEndOf="@id/image"
+            android:layout_marginStart="5dp"
             android:layout_marginTop="27dp"
             android:text="歌曲名字"
             android:textColor="#023650"
@@ -50,8 +50,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@id/Name"
-            android:layout_toRightOf="@id/image"
-            android:layout_marginLeft="5dp"
+            android:layout_toEndOf="@id/image"
+            android:layout_marginStart="5dp"
             android:layout_marginTop="10dp"
             android:text="艺术家"
             android:textColor="#023650"
@@ -59,26 +59,25 @@
 
         <Button
             android:id="@+id/onClickLastSong"
-            android:layout_width="50dp"
-            android:layout_height="55dp"
-            android:layout_toLeftOf="@id/onClickBroadcast"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_toStartOf="@id/onClickBroadcast"
             android:layout_alignParentBottom="true"
-            android:text="上"/>
+            android:background="@drawable/ic_prev"/>
 
         <Button
             android:id="@+id/onClickBroadcast"
-            android:layout_width="50dp"
-            android:layout_height="55dp"
-            android:layout_toLeftOf="@id/onClickNextSong"
-            android:layout_alignParentBottom="true"
-            android:text="放"/>
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_toStartOf="@id/onClickNextSong"
+            android:layout_alignParentBottom="true" />
 
         <Button
             android:id="@+id/onClickNextSong"
-            android:layout_width="50dp"
-            android:layout_height="55dp"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
             android:layout_alignParentEnd="true"
             android:layout_alignParentBottom="true"
-            android:text="下"/>
+            android:background="@drawable/ic_next"/>
 
 </RelativeLayout>

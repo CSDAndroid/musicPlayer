@@ -16,7 +16,7 @@
             android:layout_width="25dp"
             android:layout_height="wrap_content"
             android:layout_weight="10"
-            android:drawableLeft="@drawable/ic_arrow" />
+            android:drawableStart="@drawable/ic_arrow" />
 
         <EditText
             android:id="@+id/MusicSearch"
@@ -25,7 +25,7 @@
             android:textSize="15sp"
             android:layout_weight="100"
             android:background="@drawable/search_box"
-            android:drawableLeft="@drawable/search"
+            android:drawableStart="@drawable/search"
             android:hint="歌曲"/>
 
         <Button
@@ -40,12 +40,13 @@
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/MusicListView"
         android:layout_width="match_parent"
-        android:layout_height="550dp"
+        android:layout_height="650dp"
         android:layout_below="@id/LinearLayout1"/>
 
     <com.example.myapplication.MusicPlayer
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/MusicListView"/>
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="20dp"/>
 
 </RelativeLayout>

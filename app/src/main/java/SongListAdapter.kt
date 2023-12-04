@@ -8,9 +8,8 @@ import android.widget.Button
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.myapplication.R
-import kotlin.properties.Delegates
 
-class SongListAdapter(private val songList: List<Song>, context: Context): RecyclerView.Adapter<SongListAdapter.ViewHolder>(){
+class SongListAdapter(val songList: List<Song>, context: Context): RecyclerView.Adapter<SongListAdapter.ViewHolder>(){
 
     private val dbHelper=MusicDatabase(context)
     val db=dbHelper.writableDatabase
@@ -33,13 +32,13 @@ class SongListAdapter(private val songList: List<Song>, context: Context): Recyc
                         val editor=sharedPreference.edit()
                         editor.putBoolean("isPlaying_${song.id}",false)
                         editor.apply()
-                        MusicData.currentSongList=songList
-                        MusicData.currentPosition=position
                     }else{
                         playButton.setBackgroundResource(R.drawable.ic_pause)
                         val editor=sharedPreference.edit()
                         editor.putBoolean("isPlaying_${song.id}",true)
                         editor.apply()
+                        MusicData.currentSongList=songList
+                        MusicData.currentPosition=position
                     }
                     isPlaying=!isPlaying
                 }
@@ -107,9 +106,10 @@ class SongListAdapter(private val songList: List<Song>, context: Context): Recyc
     }
 
     override fun getItemCount()=songList.size
-}
 
-object MusicData{
-    lateinit var currentSongList: List<Song>
-    var currentPosition by Delegates.notNull<Int>()
+    object MusicData{
+        var currentSongList: List<Song>?=null
+        var currentPosition:Int?=null
+    }
+
 }
