@@ -9,6 +9,7 @@ import androidx.activity.ComponentActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 
+@Suppress("DEPRECATION")
 class MainActivity : ComponentActivity() {
     private val REQUEST_CODE = 123
 

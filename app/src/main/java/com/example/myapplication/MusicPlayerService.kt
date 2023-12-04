@@ -45,11 +45,17 @@ class MusicPlayerService : Service() {
     }
 
    inner class MusicControl :Binder(){
+//       private var currentPosition = 0
+//       private var songList: List<Song>? = null
+
        fun play(position:Int,songList:List<Song>){
+           if(position<0||position>=songList.size) return
+//           currentPosition=position
            val uri= Uri.parse(songList[position].data)
            try {
                player?.reset()
-               MediaPlayer().setDataSource(applicationContext,uri)
+               player?.setDataSource(applicationContext,uri)
+               player?.prepare()
                player?.start()
                addTimer()
            }catch (e:Exception){
@@ -68,9 +74,10 @@ class MusicPlayerService : Service() {
 
     override fun onDestroy() {
         super.onDestroy()
-        if(player==null)return
-        if(player!!.isPlaying) player!!.stop()
-        player!!.release()
-        player=null
+        if (player!=null) {
+            if (player!!.isPlaying) player!!.stop()
+            player!!.release()
+            player = null
+        }
     }
 }

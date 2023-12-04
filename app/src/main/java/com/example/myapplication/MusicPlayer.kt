@@ -1,6 +1,6 @@
 package com.example.myapplication
 
-import Song
+import MusicData
 import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
@@ -10,13 +10,13 @@ import android.os.IBinder
 import android.os.Looper
 import android.os.Message
 import android.util.AttributeSet
+import android.util.Log
 import android.view.LayoutInflater
 import android.widget.Button
 import android.widget.RelativeLayout
 import android.widget.SeekBar
 import android.widget.TextView
 import java.lang.ref.WeakReference
-import kotlin.properties.Delegates
 
 class MusicPlayer(context: Context, attrs: AttributeSet?):RelativeLayout(context,attrs) {
     private var sb: SeekBar? = null
@@ -29,29 +29,13 @@ class MusicPlayer(context: Context, attrs: AttributeSet?):RelativeLayout(context
     private var next: Button? = null
 
     private var musicControl: MusicPlayerService.MusicControl? = null
-    private var isUnbind = false
 
     private val serviceConnection = object : ServiceConnection {
         override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
+            Log.d("o", "Service connected")
             musicControl = service as MusicPlayerService.MusicControl
-            isUnbind = true
         }
-
-        override fun onServiceDisconnected(p0: ComponentName?) {
-            isUnbind = false
-        }
-    }
-
-    private fun unbind(isUnbind: Boolean) {
-        if (!isUnbind) {
-            musicControl?.pause()
-            context.unbindService(serviceConnection)
-        }
-    }
-
-    object MusicData{
-        lateinit var currentSongList: List<Song>
-        var currentPosition by Delegates.notNull<Int>()
+        override fun onServiceDisconnected(name: ComponentName?) {}
     }
 
     private var songList=MusicData.currentSongList
@@ -75,8 +59,11 @@ class MusicPlayer(context: Context, attrs: AttributeSet?):RelativeLayout(context
     }
 
     private fun init() {
+        play!!.setBackgroundResource(R.drawable.ic_pause)
         name!!.text= position.let { songList[it].name }
         artist!!.text= position.let { songList[it].artist }
+        position.let { it1 -> songList.let { it2 -> musicControl?.play(it1, it2) } }
+
         sb!!.setOnSeekBarChangeListener(object :
             SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(p0: SeekBar?, p1: Int, p2: Boolean) {}
@@ -93,8 +80,10 @@ class MusicPlayer(context: Context, attrs: AttributeSet?):RelativeLayout(context
             val song = position.let { it1 -> songList[it1] }
             val isPlaying = sharedPreference.getBoolean("isPlaying_${song.id}", false)
             if (isPlaying) {
+                play!!.setBackgroundResource(R.drawable.ic_play)
                 musicControl?.pause()
             } else {
+                play!!.setBackgroundResource(R.drawable.ic_pause)
                 position.let { it1 -> songList.let { it2 -> musicControl?.play(it1, it2) } }
             }
         }
@@ -102,26 +91,31 @@ class MusicPlayer(context: Context, attrs: AttributeSet?):RelativeLayout(context
         prev!!.setOnClickListener {
             if (position == 0) {
                 songList.let { it1 -> musicControl?.play(position, it1) }
+            }else {
+                position -= 1
+                name!!.text = position.let { songList[it].name }
+                artist!!.text = position.let { songList[it].artist }
+                songList.let { it1 -> musicControl?.play(position, it1) }
             }
-            position -= 1
-            name!!.text= position.let { songList[it].name }
-            artist!!.text= position.let { songList[it].artist }
-            songList.let { it1 -> musicControl?.play(position, it1) }
         }
 
         next!!.setOnClickListener {
-            position += 1
-            name!!.text= position.let { songList[it].name }
-            artist!!.text= position.let { songList[it].artist }
-            songList.let { it1 -> musicControl?.play(position, it1) }
+            if(position>songList.size-1){
+                position=0
+                songList.let { it1 -> musicControl?.play(position, it1) }
+            }else {
+                position += 1
+                name!!.text = position.let { songList[it].name }
+                artist!!.text = position.let { songList[it].artist }
+                songList.let { it1 -> musicControl?.play(position, it1) }
+            }
         }
-
     }
 
-//    companion object {
-//        private var sb: WeakReference<SeekBar>? = null
-//        private var tv_progress: WeakReference<TextView>? = null
-//        private var tv_total: WeakReference<TextView>? = null
+//        companion object {
+//        private var sb: SeekBar? = null
+//        private var tv_progress: TextView? = null
+//        private var tv_total: TextView? = null
 //
 //        var handler: Handler = object : Handler() {
 //            override fun handleMessage(msg: Message) {
@@ -163,6 +157,7 @@ class MusicPlayer(context: Context, attrs: AttributeSet?):RelativeLayout(context
 //        }
 //    }
 
+
     companion object {
         private lateinit var sbRef: WeakReference<SeekBar>
         private lateinit var tvProgressRef: WeakReference<TextView>
@@ -186,18 +181,22 @@ class MusicPlayer(context: Context, attrs: AttributeSet?):RelativeLayout(context
             }
         }
 
-        // 在需要使用 SeekBar 和 TextView 对象时，可以通过 WeakReference 获取它们
         fun setViews(sb: SeekBar, tvProgress: TextView, tvTotal: TextView) {
             sbRef = WeakReference(sb)
             tvProgressRef = WeakReference(tvProgress)
             tvTotalRef = WeakReference(tvTotal)
         }
 
-        // 扩展函数，将时间戳转换为格式化的时间字符串
         fun Int.toTimeString(): String {
             val minute = this / 1000 / 60
             val second = this / 1000 % 60
             return String.format("%02d:%02d", minute, second)
         }
     }
+
+    override fun onDetachedFromWindow() {
+        super.onDetachedFromWindow()
+        context.unbindService(serviceConnection)
+    }
 }
+

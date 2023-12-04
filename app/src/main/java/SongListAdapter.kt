@@ -7,8 +7,8 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.example.myapplication.MusicPlayer
 import com.example.myapplication.R
+import kotlin.properties.Delegates
 
 class SongListAdapter(private val songList: List<Song>, context: Context): RecyclerView.Adapter<SongListAdapter.ViewHolder>(){
 
@@ -18,7 +18,7 @@ class SongListAdapter(private val songList: List<Song>, context: Context): Recyc
     private val sharedPreference=context.getSharedPreferences("isPlaying",Context.MODE_PRIVATE)
 
     inner class ViewHolder(view: View): RecyclerView.ViewHolder(view){
-        private val playButton: Button =view.findViewById(R.id.play_button)
+        val playButton: Button =view.findViewById(R.id.play_button)
         val songName: TextView =view.findViewById(R.id.songName)
         val artistName: TextView =view.findViewById(R.id.artistName)
         val likeButton: Button =itemView.findViewById(R.id.MyLike_button)
@@ -33,8 +33,8 @@ class SongListAdapter(private val songList: List<Song>, context: Context): Recyc
                         val editor=sharedPreference.edit()
                         editor.putBoolean("isPlaying_${song.id}",false)
                         editor.apply()
-                        MusicPlayer.MusicData.currentSongList=songList
-                        MusicPlayer.MusicData.currentPosition=position
+                        MusicData.currentSongList=songList
+                        MusicData.currentPosition=position
                     }else{
                         playButton.setBackgroundResource(R.drawable.ic_pause)
                         val editor=sharedPreference.edit()
@@ -92,6 +92,12 @@ class SongListAdapter(private val songList: List<Song>, context: Context): Recyc
         val song=songList[position]
         holder.songName.text=song.name
         holder.artistName.text=song.artist
+        val isPlaying=sharedPreference.getBoolean("isPlaying_${song.id}",false)
+        if(isPlaying){
+            holder.playButton.setBackgroundResource(R.drawable.ic_pause)
+        }else{
+            holder.playButton.setBackgroundResource(R.drawable.ic_play)
+        }
         val isCollected=sharedPreferences.getBoolean("isCollected_${song.id}",false)
         if(isCollected){
             holder.likeButton.setBackgroundResource(R.drawable.heart)
@@ -101,4 +107,9 @@ class SongListAdapter(private val songList: List<Song>, context: Context): Recyc
     }
 
     override fun getItemCount()=songList.size
+}
+
+object MusicData{
+    lateinit var currentSongList: List<Song>
+    var currentPosition by Delegates.notNull<Int>()
 }

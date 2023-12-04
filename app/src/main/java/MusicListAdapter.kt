@@ -30,7 +30,6 @@ class MusicListAdapter(private val musicList: List<Music>, context: Context): Re
                         val editor=sharedPreferences.edit()
                         editor.putBoolean("isCollected_${music.id}",true)
                         editor.apply()
-
                         val values= ContentValues().apply{
                             put(MusicDatabase.COLUMN_NAME,music.name)
                             put(MusicDatabase.COLUMN_ARTIST,music.artist)
@@ -47,7 +46,6 @@ class MusicListAdapter(private val musicList: List<Music>, context: Context): Re
                         val editor=sharedPreferences.edit()
                         editor.putBoolean("isCollected_${music.id}",false)
                         editor.apply()
-
                         val selection = "${MusicDatabase.COLUMN_NAME}=? AND ${MusicDatabase.COLUMN_ARTIST}=? AND ${MusicDatabase.COLUMN_ID}=? AND ${MusicDatabase.COLUMN_DURATION}=? AND ${MusicDatabase.COLUMN_MIMETYPE}=? AND ${MusicDatabase.COLUMN_SIZE}=? AND ${MusicDatabase.COLUMN_DATA}=? AND ${MusicDatabase.COLUMN_ALBUM_ID}=?"
                         val selectionArgs= arrayOf(music.name, music.artist, music.id.toString(), music.duration.toString(), music.mimeType, music.size.toString(), music.data,music.albumId.toString())
                         db.delete(MusicDatabase.TABLE_NAME,selection,selectionArgs)

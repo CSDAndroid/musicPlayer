@@ -29,7 +29,6 @@ class MusicListActivity : ComponentActivity() {
 
         val layoutManager = LinearLayoutManager(this)
         musicListView.layoutManager = layoutManager
-
         val adapter = MusicListAdapter(musicList,this)
         musicListView.adapter = adapter
     }
