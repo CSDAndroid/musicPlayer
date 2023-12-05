@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="center">
+
+    <ImageView
+        android:id="@+id/iv_music"
+        android:layout_width="240dp"
+        android:layout_height="240dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_margin="15dp"
+        android:src="@drawable/ic_launcher_background"/>
+
+    <TextView
+        android:id="@+id/song_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="歌名"
+        android:textSize="20sp"/>
+
+    <SeekBar
+        android:id="@+id/sb"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingLeft="8dp"
+        android:paddingRight="8dp">
+
+        <TextView
+            android:id="@+id/iv_progress"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="00:00"/>
+
+        <TextView
+            android:id="@+id/iv_total"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:text="00:00"/>
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <Button
+            android:id="@+id/prev"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginStart="100dp"
+            android:background="@drawable/ic_prev" />
+
+        <Button
+            android:id="@+id/play"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginStart="175dp"/>
+
+        <Button
+            android:id="@+id/next"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginStart="250dp"
+            android:background="@drawable/ic_next"/>
+    </RelativeLayout>
+</LinearLayout>

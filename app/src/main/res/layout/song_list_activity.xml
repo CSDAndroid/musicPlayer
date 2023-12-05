@@ -40,15 +40,7 @@
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/songListView"
         android:layout_width="match_parent"
-        android:layout_height="650dp"
+        android:layout_height="750dp"
         android:layout_below="@id/LinearLayout"
         android:layout_alignParentStart="true" />
-
-    <com.example.myapplication.MusicPlayer
-        android:id="@+id/musicPlayer"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"/>
-
-
 </RelativeLayout>

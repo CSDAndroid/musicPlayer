@@ -8,7 +8,7 @@ import android.net.Uri
 import android.os.Binder
 import android.os.Bundle
 import android.os.IBinder
-import android.util.Log
+import android.os.Message
 import java.util.Timer
 import java.util.TimerTask
 
@@ -30,18 +30,17 @@ class MusicPlayerService : Service() {
             timer=Timer()
             val task:TimerTask=object: TimerTask(){
                 override fun run() {
-                    if(player==null)return
                     val duration=player!!.duration
                     val currentPosition=player!!.currentPosition
-                    val msg=MusicPlayer.handler.obtainMessage()
+                    val msg= Message()
                     val bundle= Bundle()
                     bundle.putInt("duration",duration)
                     bundle.putInt("currentPosition",currentPosition)
                     msg.data=bundle
-                    MusicPlayer.handler.handleMessage(msg)
+                    MusicPlayer2.handler?.sendMessage(msg)
                 }
             }
-            timer!!.schedule(task,5,500)
+            timer!!.schedule(task,0,1000)
         }
     }
 
@@ -49,17 +48,12 @@ class MusicPlayerService : Service() {
        fun play(position:Int,songList:List<Song>){
            if(position<0||position>=songList.size) return
            val uri= Uri.parse(songList[position].data)
-           Log.d("wps","$uri")
            try {
                player?.reset()
-               Log.d("wps1","success")
                player?.setDataSource(applicationContext,uri)
-               Log.d("wps2","success")
                player?.prepare()
-               Log.d("wps3","success")
                player?.start()
-               Log.d("wps4","success")
-//               addTimer()
+               addTimer()
            }catch (e:Exception){
                e.printStackTrace()
            }
@@ -81,5 +75,7 @@ class MusicPlayerService : Service() {
             player!!.release()
             player = null
         }
+        timer?.cancel()
+        timer = null
     }
 }
