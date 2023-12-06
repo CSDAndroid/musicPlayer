@@ -21,11 +21,12 @@ class SongListAdapter(val songList: List<Song>, context: Context): RecyclerView.
         val songName: TextView =view.findViewById(R.id.songName)
         val artistName: TextView =view.findViewById(R.id.artistName)
 
-        private val playButton: Button =view.findViewById(R.id.play_button)
+        val playButton: Button =view.findViewById(R.id.play_button)
         init {
             playButton.setOnClickListener{
                 val position=bindingAdapterPosition
                 if(position!=RecyclerView.NO_POSITION){
+                    playButton.setBackgroundResource(R.drawable.ic_pause)
                     MusicData.currentSongList=songList
                     MusicData.currentPosition=position
                     val intent=Intent(itemView.context,MusicPlayer2::class.java)
@@ -81,6 +82,7 @@ class SongListAdapter(val songList: List<Song>, context: Context): RecyclerView.
         val song=songList[position]
         holder.songName.text=song.name
         holder.artistName.text=song.artist
+        holder.playButton.setBackgroundResource(R.drawable.ic_play)
         val isCollected=sharedPreferences.getBoolean("isCollected_${song.id}",false)
         if(isCollected){
             holder.likeButton.setBackgroundResource(R.drawable.heart)

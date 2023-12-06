@@ -1,14 +1,16 @@
 import android.content.ContentValues
 import android.content.Context
+import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.example.myapplication.MusicPlayer2
 import com.example.myapplication.R
 
-class MusicListAdapter(private val musicList: List<Music>, context: Context): RecyclerView.Adapter<MusicListAdapter.ViewHolder>(){
+class MusicListAdapter(val musicList: List<Song>, context: Context): RecyclerView.Adapter<MusicListAdapter.ViewHolder>(){
 
     private val dbHelper=MusicDatabase(context)
     val db=dbHelper.writableDatabase
@@ -17,6 +19,20 @@ class MusicListAdapter(private val musicList: List<Music>, context: Context): Re
     inner class ViewHolder(view: View): RecyclerView.ViewHolder(view){
         val musicName: TextView =view.findViewById(R.id.musicName)
         val artistName1: TextView =view.findViewById(R.id.artistName1)
+
+        val playButton1: Button =view.findViewById(R.id.play_button1)
+        init {
+            playButton1.setOnClickListener {
+                val position=bindingAdapterPosition
+                if(position!=RecyclerView.NO_POSITION){
+                    playButton1.setBackgroundResource(R.drawable.ic_pause)
+                    SongListAdapter.MusicData.currentSongList=musicList
+                    SongListAdapter.MusicData.currentPosition=position
+                    val intent=Intent(itemView.context,MusicPlayer2::class.java)
+                    itemView.context.startActivities(arrayOf(intent))
+                }
+            }
+        }
 
         val likeButton1: Button =itemView.findViewById(R.id.MyLike_button1)
         init {
@@ -65,6 +81,7 @@ class MusicListAdapter(private val musicList: List<Music>, context: Context): Re
         val music=musicList[position]
         holder.musicName.text=music.name
         holder.artistName1.text=music.artist
+        holder.playButton1.setBackgroundResource(R.drawable.ic_play)
 
         val isCollected=sharedPreferences.getBoolean("isCollected_${music.id}",false)
         if(isCollected){

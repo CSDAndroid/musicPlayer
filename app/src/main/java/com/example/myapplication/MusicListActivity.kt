@@ -1,8 +1,8 @@
 package com.example.myapplication
 
-import Music
 import MusicDatabase
 import MusicListAdapter
+import Song
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
@@ -33,8 +33,8 @@ class MusicListActivity : ComponentActivity() {
         musicListView.adapter = adapter
     }
 
-    private fun getMusicList(): ArrayList<Music> {
-        val musicList=ArrayList<Music>()
+    private fun getMusicList(): ArrayList<Song> {
+        val musicList=ArrayList<Song>()
         val dbHelper=MusicDatabase(this)
         val db=dbHelper.writableDatabase
 
@@ -59,8 +59,8 @@ class MusicListActivity : ComponentActivity() {
             val albumId=cursor.getLong(cursor.getColumnIndexOrThrow(MusicDatabase.COLUMN_ALBUM_ID))
 
             if (name != null && artist != null && data != null && mimeType != null) {
-                val music = Music(name, artist, id, data, duration, size, mimeType,albumId)
-                musicList.add(music)
+                val song = Song(name, artist, id, duration, size, mimeType, data, albumId)
+                musicList.add(song)
             }
         }
 

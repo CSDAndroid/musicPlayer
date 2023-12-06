@@ -37,7 +37,6 @@
         android:layout_marginTop="25dp"
         android:layout_marginEnd="50dp"
         android:background="@color/white"
-        android:drawableLeft="@drawable/ic_play"
         android:onClick="onPlayButtonClick"/>
 
     <Button

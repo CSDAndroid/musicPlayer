@@ -2,6 +2,7 @@ package com.example.myapplication
 
 import Song
 import SongListAdapter
+import android.animation.ObjectAnimator
 import android.content.ComponentName
 import android.content.Intent
 import android.content.ServiceConnection
@@ -11,15 +12,16 @@ import android.os.IBinder
 import android.os.Looper
 import android.os.Message
 import android.widget.Button
+import android.widget.ImageView
 import android.widget.SeekBar
 import android.widget.TextView
 import androidx.activity.ComponentActivity
 
 class MusicPlayer2 : ComponentActivity() {
+    private var animator:ObjectAnimator?=null
     private var intent:Intent?=null
     private var songList:List<Song>?=null
     private var position:Int?=null
-
     private var isUnbind=false
     private var musicControl: MusicPlayerService.MusicControl? = null
 
@@ -66,10 +68,19 @@ class MusicPlayer2 : ComponentActivity() {
         val prev=findViewById<Button>(R.id.prev)
         val next=findViewById<Button>(R.id.next)
         val name=findViewById<TextView>(R.id.song_name)
+        val ivMusic=findViewById<ImageView>(R.id.iv_music)
+        val sharedPreferences = getSharedPreferences("isPlaying", MODE_PRIVATE)
 
         if(position!=null&&songList!=null){
             name!!.text= songList!![position!!].name
+            play.setBackgroundResource(R.drawable.ic_play)
+            val editor=sharedPreferences.edit()
+            editor.putBoolean("isPlaying_${songList!![position!!].id}",false)
+            editor.apply()
         }
+
+        ivMusic.setImageResource(R.drawable.ic_launcher_foreground)
+        animator= ObjectAnimator.ofFloat(ivMusic,"rotation",0f,360.0f)
 
         sb?.setOnSeekBarChangeListener(object :
             SeekBar.OnSeekBarChangeListener {
@@ -83,7 +94,20 @@ class MusicPlayer2 : ComponentActivity() {
 
         play?.setOnClickListener {
             if (position != null&&songList!=null) {
-                musicControl?.play(position!!,songList!!)
+                val isPlaying=sharedPreferences.getBoolean("isPlaying_${songList!![position!!].id}",false)
+                if(isPlaying){
+                    musicControl!!.stop()
+                    play.setBackgroundResource(R.drawable.ic_play)
+                    val editor=sharedPreferences.edit()
+                    editor.putBoolean("isPlaying_${songList!![position!!].id}",false)
+                    editor.apply()
+                }else{
+                    musicControl?.play(position!!,songList!!)
+                    play.setBackgroundResource(R.drawable.ic_pause)
+                    val editor=sharedPreferences.edit()
+                    editor.putBoolean("isPlaying_${songList!![position!!].id}",true)
+                    editor.apply()
+                }
             }
         }
 
@@ -92,24 +116,40 @@ class MusicPlayer2 : ComponentActivity() {
                 if (position == 0) {
                     musicControl?.play(position!!,songList!!)
                     name!!.text=songList!![position!!].name
+                    play.setBackgroundResource(R.drawable.ic_pause)
+                    val editor=sharedPreferences.edit()
+                    editor.putBoolean("isPlaying_${songList!![position!!].id}",true)
+                    editor.apply()
                 } else {
                     position=position!!-1
                     musicControl?.play(position!!,songList!!)
                     name!!.text=songList!![position!!].name
+                    play.setBackgroundResource(R.drawable.ic_pause)
+                    val editor=sharedPreferences.edit()
+                    editor.putBoolean("isPlaying_${songList!![position!!].id}",true)
+                    editor.apply()
                 }
             }
         }
 
         next?.setOnClickListener {
             if(position!=null&&songList!=null) {
-                if (position == songList?.size) {
+                if (position == songList!!.size-1) {
                     position = 0
                     musicControl?.play(position!!,songList!!)
                     name!!.text=songList!![position!!].name
+                    play.setBackgroundResource(R.drawable.ic_pause)
+                    val editor=sharedPreferences.edit()
+                    editor.putBoolean("isPlaying_${songList!![position!!].id}",true)
+                    editor.apply()
                 } else {
                     position=position!!+1
                     musicControl?.play(position!!,songList!!)
                     name!!.text=songList!![position!!].name
+                    play.setBackgroundResource(R.drawable.ic_pause)
+                    val editor=sharedPreferences.edit()
+                    editor.putBoolean("isPlaying_${songList!![position!!].id}",true)
+                    editor.apply()
                 }
             }
         }
