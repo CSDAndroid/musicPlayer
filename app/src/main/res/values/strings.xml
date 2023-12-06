@@ -6,4 +6,5 @@
     <string name="total_time">%s</string>
     <string name="current_time">%s</string>
     <string name="title_activity_music_player2">MusicPlayer2</string>
+    <string name="title_activity_get_https_music">GetHttps_Music</string>
 </resources>

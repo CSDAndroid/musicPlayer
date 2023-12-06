@@ -46,11 +46,5 @@
         android:layout_alignBottom="@+id/Like"
         android:layout_alignParentEnd="true"
         android:layout_toEndOf="@id/Like"
-        android:text="全部"/>
-
-<!--    <com.example.myapplication.MusicPlayer-->
-<!--        android:layout_width="wrap_content"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:layout_alignParentBottom="true"/>-->
-
+        android:text="云端"/>
 </RelativeLayout>

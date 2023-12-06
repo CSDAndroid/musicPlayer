@@ -20,11 +20,15 @@
         android:theme="@style/Theme.MyApplication"
         tools:targetApi="31">
         <activity
+            android:name=".HttpsMusic"
+            android:exported="false"
+            android:label="@string/title_activity_get_https_music"
+            android:theme="@style/Theme.MyApplication" />
+        <activity
             android:name=".MusicPlayer2"
             android:exported="false"
             android:label="@string/title_activity_music_player2"
             android:theme="@style/Theme.MyApplication" />
-
         <service
             android:name=".MusicPlayerService"
             android:enabled="true"
