@@ -13,6 +13,7 @@ import com.google.gson.JsonObject
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import org.json.JSONObject
@@ -20,6 +21,7 @@ import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.GET
+import retrofit2.http.Query
 import java.util.concurrent.TimeUnit
 
 class HttpsMusic : ComponentActivity() {
@@ -37,15 +39,23 @@ class HttpsMusic : ComponentActivity() {
             startActivity(intent)
         }
 
-        val musicList=main()
-
-        val layoutManager = LinearLayoutManager(this)
-        httpListView.layoutManager = layoutManager
-        val adapter = HttpListAdapter(musicList,this)
-        httpListView.adapter = adapter
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                val musicList = getHttpMusic()
+                // 在主线程中更新 UI
+                withContext(Dispatchers.Main) {
+                    val layoutManager = LinearLayoutManager(this@HttpsMusic)
+                    httpListView.layoutManager = layoutManager
+                    val adapter = HttpListAdapter(musicList,this@HttpsMusic)
+                    httpListView.adapter = adapter
+                }
+            } catch (e: Exception) {
+                // 处理异常
+            }
+        }
     }
 
-    private fun main():ArrayList<Song>{
+    private suspend fun getHttpMusic():ArrayList<Song>{
         val musicList= ArrayList<Song>()
         val loggingInterceptor=HttpLoggingInterceptor().apply {
             level=HttpLoggingInterceptor.Level.BODY
@@ -59,40 +69,58 @@ class HttpsMusic : ComponentActivity() {
             .build()
 
         val retrofit=Retrofit.Builder()
-            .baseUrl("https://www.kugou.com/")
+            .baseUrl("http://8.222.172.78:3000/")
             .client(client)
             .addConverterFactory(GsonConverterFactory.create())
             .build()
 
         val service=retrofit.create(Test::class.java)
 
-        CoroutineScope(Dispatchers.IO).launch {
+        try {
             val response= service.getMusic()
             val body=response.body().toString()
             Log.d("MainActivity", "onCreate:$body")
 
-            val jsonObject=JSONObject(body)
+            val jsonObject= JSONObject(body)
             val musicsArray=jsonObject.getJSONArray("songs")
-            for(i in 0 until musicsArray.length()){
-                val musicObject=musicsArray.getJSONObject(i)
-                val name =musicObject.getString("name")
-                Log.d("TUU","name:$name")
-                val artistsArray=musicObject.getJSONArray("ar")
+            for(i in 0 until musicsArray.length()) {
+                val musicObject = musicsArray.getJSONObject(i)
+
+                val name = musicObject.getString("name")
+                Log.d("TUU", "name:$name")
+
+
+                val artistsArray = musicObject.getJSONArray("ar")
                 var artist:String?=null
-                if(artistsArray.length()>0){
-                    val artistObject=artistsArray.getJSONObject(0)
-                    artist=artistObject.getString("name")
-                    Log.d("TRE","artistNames:$artist")
+                if (artistsArray.length() > 0) {
+                    val artistObject = artistsArray.getJSONObject(0)
+                    artist = artistObject.getString("name")
                 }
+                Log.d("TRE", "artistNames:$artist")
+
+
                 val id=musicObject.getInt("id")
-                val path="htt[://8.222.172.78:3000/songs/id"
-                Log.d("TAD","path:$path")
-                val durationInMillisecond=musicObject.getInt("dt")
-                val duration=durationInMillisecond/1000
-                Log.d("TGV","duration:$duration")
-                val music=Song(name,artist!!,id,duration,0,"",path,0,false)
-                musicList.add(music)
+                Log.d("TQQ","id:$id")
+                val response1=service.getMusicUrl(id)
+                val body1=response1.body().toString()
+                val jsonObject1=JSONObject(body1)
+                val urlArray=jsonObject1.getJSONArray("data")
+                val urlObject=urlArray.getJSONObject(0)
+                val url=urlObject.getString("url")
+                Log.d("TNM","url:$url")
+
+
+                val durationInMilliseconds = musicObject.getInt("dt")
+                val duration = durationInMilliseconds / 1000
+                Log.d("TGV", "duration:$duration")
+
+                if(artist!=null){
+                    val music=Song(name,artist,id,duration,0,"",url,0,false)
+                    musicList.add(music)
+                }
             }
+        } catch (e: Exception) {
+            Log.e("MainActivity", "Error fetching music", e)
         }
         return musicList
     }
@@ -100,5 +128,7 @@ class HttpsMusic : ComponentActivity() {
     interface Test{
         @GET("/playlist/track/all?id=24381616&limit=20&offset=10")
         suspend fun getMusic(): Response<JsonObject>
+        @GET("song/url")
+        suspend fun getMusicUrl(@Query("id") id: Int):Response<JsonObject>
     }
 }
