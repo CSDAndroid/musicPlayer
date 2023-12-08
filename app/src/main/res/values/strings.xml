@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">My Application</string>
+    <string name="app_name">Alice</string>
     <string name="title_activity_main">MainActivity</string>
     <string name="title_activity_music_list">MusicListActivity</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>

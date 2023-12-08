@@ -2,7 +2,6 @@ package com.example.myapplication
 
 import Song
 import SongListAdapter
-import android.animation.ObjectAnimator
 import android.content.ComponentName
 import android.content.Intent
 import android.content.ServiceConnection
@@ -11,6 +10,8 @@ import android.os.Handler
 import android.os.IBinder
 import android.os.Looper
 import android.os.Message
+import android.view.animation.Animation
+import android.view.animation.RotateAnimation
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.SeekBar
@@ -18,7 +19,6 @@ import android.widget.TextView
 import androidx.activity.ComponentActivity
 
 class MusicPlayer2 : ComponentActivity() {
-    private var animator:ObjectAnimator?=null
     private var intent:Intent?=null
     private var songList:List<Song>?=null
     private var position:Int?=null
@@ -79,12 +79,20 @@ class MusicPlayer2 : ComponentActivity() {
             editor.apply()
         }
 
-        ivMusic.setImageResource(R.drawable.ic_launcher_foreground)
-        animator= ObjectAnimator.ofFloat(ivMusic,"rotation",0f,360.0f)
+        ivMusic.setImageResource(R.mipmap.ic_launcher_round)
+        val rotateAnimator=RotateAnimation(0f,360f,
+            Animation.RELATIVE_TO_SELF,0.5f,
+            Animation.RELATIVE_TO_SELF,0.5f)
+        rotateAnimator.duration=10000
+        rotateAnimator.repeatCount=Animation.INFINITE
 
         sb?.setOnSeekBarChangeListener(object :
             SeekBar.OnSeekBarChangeListener {
-            override fun onProgressChanged(p0: SeekBar?, p1: Int, p2: Boolean) {}
+            override fun onProgressChanged(p0: SeekBar?, p1: Int, p2: Boolean) {
+                if(p1==sb.max){
+                    ivMusic.clearAnimation()
+                }
+            }
             override fun onStartTrackingTouch(p0: SeekBar?) {}
             override fun onStopTrackingTouch(p0: SeekBar?) {
                 val progress = sb.progress
@@ -101,12 +109,14 @@ class MusicPlayer2 : ComponentActivity() {
                     val editor=sharedPreferences.edit()
                     editor.putBoolean("isPlaying_${songList!![position!!].id}",false)
                     editor.apply()
+                    ivMusic.clearAnimation()
                 }else{
                     musicControl?.play(position!!,songList!!)
                     play.setBackgroundResource(R.drawable.ic_pause)
                     val editor=sharedPreferences.edit()
                     editor.putBoolean("isPlaying_${songList!![position!!].id}",true)
                     editor.apply()
+                    ivMusic.startAnimation(rotateAnimator)
                 }
             }
         }
@@ -120,6 +130,7 @@ class MusicPlayer2 : ComponentActivity() {
                     val editor=sharedPreferences.edit()
                     editor.putBoolean("isPlaying_${songList!![position!!].id}",true)
                     editor.apply()
+                    ivMusic.startAnimation(rotateAnimator)
                 } else {
                     position=position!!-1
                     musicControl?.play(position!!,songList!!)
@@ -128,6 +139,7 @@ class MusicPlayer2 : ComponentActivity() {
                     val editor=sharedPreferences.edit()
                     editor.putBoolean("isPlaying_${songList!![position!!].id}",true)
                     editor.apply()
+                    ivMusic.startAnimation(rotateAnimator)
                 }
             }
         }
@@ -142,6 +154,7 @@ class MusicPlayer2 : ComponentActivity() {
                     val editor=sharedPreferences.edit()
                     editor.putBoolean("isPlaying_${songList!![position!!].id}",true)
                     editor.apply()
+                    ivMusic.startAnimation(rotateAnimator)
                 } else {
                     position=position!!+1
                     musicControl?.play(position!!,songList!!)
@@ -150,6 +163,7 @@ class MusicPlayer2 : ComponentActivity() {
                     val editor=sharedPreferences.edit()
                     editor.putBoolean("isPlaying_${songList!![position!!].id}",true)
                     editor.apply()
+                    ivMusic.startAnimation(rotateAnimator)
                 }
             }
         }

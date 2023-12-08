@@ -51,6 +51,7 @@ class MainActivity : ComponentActivity() {
     private fun initialize() {
         val like=findViewById<Button>(R.id.Like)
         val local=findViewById<Button>(R.id.local)
+        val all=findViewById<Button>(R.id.all)
 
         like.setOnClickListener{
             val intent1= Intent(this,MusicListActivity::class.java)
@@ -60,6 +61,11 @@ class MainActivity : ComponentActivity() {
         local.setOnClickListener{
             val intent=Intent(this,SongListActivity::class.java)
             startActivity(intent)
+        }
+
+        all.setOnClickListener {
+            val intent2=Intent(this,HttpsMusic::class.java)
+            startActivity(intent2)
         }
     }
 }
