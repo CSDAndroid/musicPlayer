@@ -1,3 +1,4 @@
+
 import android.content.ContentValues
 import android.content.Context
 import android.content.Intent
@@ -30,6 +31,7 @@ class HttpListAdapter(val musicList: List<Song>, context: Context): RecyclerView
                     SongListAdapter.MusicData.currentPosition=position
                     val intent=Intent(itemView.context,MusicPlayer2::class.java)
                     itemView.context.startActivities(arrayOf(intent))
+                    playButton2.setBackgroundResource(R.drawable.ic_play)
                 }
             }
         }

@@ -63,6 +63,10 @@ class MusicPlayerService : Service() {
            player?.stop()
        }
 
+       fun continuePlay(){
+           player?.start()
+       }
+
        fun pause(){
            player?.pause()
        }

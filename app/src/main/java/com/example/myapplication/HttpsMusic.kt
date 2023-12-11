@@ -6,6 +6,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.widget.Button
+import android.widget.EditText
 import androidx.activity.ComponentActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -27,6 +28,8 @@ import java.util.concurrent.TimeUnit
 class HttpsMusic : ComponentActivity() {
     private lateinit var httpListView:RecyclerView
     private lateinit var back2:Button
+    private lateinit var search2:Button
+    private lateinit var musicSearch:EditText
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -53,6 +56,48 @@ class HttpsMusic : ComponentActivity() {
                 // 处理异常
             }
         }
+
+        search2=findViewById(R.id.search2)
+        search2.setOnClickListener {
+            CoroutineScope(Dispatchers.IO).launch {
+                try {
+                    val musicList=getMusic()
+                }catch (e:Exception){
+                    //处理异常
+                }
+            }
+        }
+    }
+
+    private suspend fun getMusic(){
+        val loggingInterceptor=HttpLoggingInterceptor().apply {
+            level=HttpLoggingInterceptor.Level.BODY
+        }
+
+        val client=OkHttpClient.Builder()
+            .connectTimeout(3000L,TimeUnit.MILLISECONDS)
+            .writeTimeout(10,TimeUnit.SECONDS)
+            .retryOnConnectionFailure(true)
+            .addInterceptor(loggingInterceptor)
+            .build()
+
+        val retrofit=Retrofit.Builder()
+            .baseUrl("http://8.222.172.78:3000/")
+            .client(client)
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
+
+        val service=retrofit.create(Http::class.java)
+
+        musicSearch=findViewById(R.id.MusicSearch)
+        val keywords=musicSearch.text.toString()
+        try {
+            val response=service.getMusicKey(keywords)
+            val body=response.body().toString()
+            Log.d("HttpActivity","body:$body")
+        }catch (e: Exception) {
+            Log.e("HttpActivity", "Error fetching music", e)
+        }
     }
 
     private suspend fun getHttpMusic():ArrayList<Song>{
@@ -74,7 +119,7 @@ class HttpsMusic : ComponentActivity() {
             .addConverterFactory(GsonConverterFactory.create())
             .build()
 
-        val service=retrofit.create(Test::class.java)
+        val service=retrofit.create(Http::class.java)
 
         try {
             val response= service.getMusic()
@@ -125,10 +170,12 @@ class HttpsMusic : ComponentActivity() {
         return musicList
     }
 
-    interface Test{
+    interface Http{
         @GET("/playlist/track/all?id=24381616&limit=20&offset=10")
         suspend fun getMusic(): Response<JsonObject>
-        @GET("song/url")
+        @GET("song/url/v1")
         suspend fun getMusicUrl(@Query("id") id: Int):Response<JsonObject>
+        @GET("/search")
+        suspend fun getMusicKey(@Query("keywords") keywords:String):Response<JsonObject>
     }
 }

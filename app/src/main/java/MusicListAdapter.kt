@@ -30,6 +30,7 @@ class MusicListAdapter(val musicList: List<Song>, context: Context): RecyclerVie
                     SongListAdapter.MusicData.currentPosition=position
                     val intent=Intent(itemView.context,MusicPlayer2::class.java)
                     itemView.context.startActivities(arrayOf(intent))
+                    playButton1.setBackgroundResource(R.drawable.ic_play)
                 }
             }
         }

@@ -42,7 +42,6 @@ class MusicPlayer2 : ComponentActivity() {
         intent=Intent(this,MusicPlayerService::class.java)
         bindService(intent,serviceConnection, BIND_AUTO_CREATE)
     }
-
     private fun unbind(){
        if(isUnbind){
            return
@@ -56,7 +55,6 @@ class MusicPlayer2 : ComponentActivity() {
         override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
             musicControl = service as MusicPlayerService.MusicControl
         }
-
         override fun onServiceDisconnected(name: ComponentName?) {
             musicControl=null
         }
@@ -79,7 +77,7 @@ class MusicPlayer2 : ComponentActivity() {
             editor.apply()
         }
 
-        ivMusic.setImageResource(R.mipmap.ic_launcher_round)
+        ivMusic.setImageResource(R.mipmap.ic_launcher_1_foreground)
         val rotateAnimator=RotateAnimation(0f,360f,
             Animation.RELATIVE_TO_SELF,0.5f,
             Animation.RELATIVE_TO_SELF,0.5f)
@@ -102,19 +100,26 @@ class MusicPlayer2 : ComponentActivity() {
 
         play?.setOnClickListener {
             if (position != null&&songList!=null) {
+                val i=sharedPreferences.getBoolean("i_${songList!![position!!].id}",false)
                 val isPlaying=sharedPreferences.getBoolean("isPlaying_${songList!![position!!].id}",false)
                 if(isPlaying){
-                    musicControl!!.stop()
+                    musicControl!!.pause()
                     play.setBackgroundResource(R.drawable.ic_play)
                     val editor=sharedPreferences.edit()
                     editor.putBoolean("isPlaying_${songList!![position!!].id}",false)
+                    editor.putBoolean("i_${songList!![position!!].id}",true)
                     editor.apply()
                     ivMusic.clearAnimation()
                 }else{
-                    musicControl?.play(position!!,songList!!)
+                    if(i){
+                        musicControl?.continuePlay()
+                    }else {
+                        musicControl?.play(position!!, songList!!)
+                    }
                     play.setBackgroundResource(R.drawable.ic_pause)
                     val editor=sharedPreferences.edit()
                     editor.putBoolean("isPlaying_${songList!![position!!].id}",true)
+                    editor.putBoolean("i_${songList!![position!!].id}",false)
                     editor.apply()
                     ivMusic.startAnimation(rotateAnimator)
                 }
@@ -124,22 +129,10 @@ class MusicPlayer2 : ComponentActivity() {
         prev?.setOnClickListener {
             if(position!=null&&songList!=null) {
                 if (position == 0) {
-                    musicControl?.play(position!!,songList!!)
-                    name!!.text=songList!![position!!].name
-                    play.setBackgroundResource(R.drawable.ic_pause)
-                    val editor=sharedPreferences.edit()
-                    editor.putBoolean("isPlaying_${songList!![position!!].id}",true)
-                    editor.apply()
-                    ivMusic.startAnimation(rotateAnimator)
+                        name!!.text = songList!![position!!].name
                 } else {
-                    position=position!!-1
-                    musicControl?.play(position!!,songList!!)
-                    name!!.text=songList!![position!!].name
-                    play.setBackgroundResource(R.drawable.ic_pause)
-                    val editor=sharedPreferences.edit()
-                    editor.putBoolean("isPlaying_${songList!![position!!].id}",true)
-                    editor.apply()
-                    ivMusic.startAnimation(rotateAnimator)
+                        position = position!! - 1
+                        name!!.text = songList!![position!!].name
                 }
             }
         }
@@ -148,22 +141,10 @@ class MusicPlayer2 : ComponentActivity() {
             if(position!=null&&songList!=null) {
                 if (position == songList!!.size-1) {
                     position = 0
-                    musicControl?.play(position!!,songList!!)
-                    name!!.text=songList!![position!!].name
-                    play.setBackgroundResource(R.drawable.ic_pause)
-                    val editor=sharedPreferences.edit()
-                    editor.putBoolean("isPlaying_${songList!![position!!].id}",true)
-                    editor.apply()
-                    ivMusic.startAnimation(rotateAnimator)
+                    name!!.text = songList!![position!!].name
                 } else {
-                    position=position!!+1
-                    musicControl?.play(position!!,songList!!)
-                    name!!.text=songList!![position!!].name
-                    play.setBackgroundResource(R.drawable.ic_pause)
-                    val editor=sharedPreferences.edit()
-                    editor.putBoolean("isPlaying_${songList!![position!!].id}",true)
-                    editor.apply()
-                    ivMusic.startAnimation(rotateAnimator)
+                    position = position!! + 1
+                    name!!.text = songList!![position!!].name
                 }
             }
         }
