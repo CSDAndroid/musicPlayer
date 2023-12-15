@@ -61,7 +61,7 @@ class HttpsMusic : ComponentActivity() {
         search2.setOnClickListener {
             CoroutineScope(Dispatchers.IO).launch {
                 try {
-                    val musicList=getMusic()
+                    val musicList=getMusic1()
                 }catch (e:Exception){
                     //处理异常
                 }
@@ -69,7 +69,7 @@ class HttpsMusic : ComponentActivity() {
         }
     }
 
-    private suspend fun getMusic(){
+    private suspend fun getMusic1(){
         val loggingInterceptor=HttpLoggingInterceptor().apply {
             level=HttpLoggingInterceptor.Level.BODY
         }
@@ -87,14 +87,14 @@ class HttpsMusic : ComponentActivity() {
             .addConverterFactory(GsonConverterFactory.create())
             .build()
 
-        val service=retrofit.create(Http::class.java)
+        val service1=retrofit.create(Http::class.java)
 
         musicSearch=findViewById(R.id.MusicSearch)
         val keywords=musicSearch.text.toString()
         try {
-            val response=service.getMusicKey(keywords)
-            val body=response.body().toString()
-            Log.d("HttpActivity","body:$body")
+            val response1=service1.getMusicKey(keywords)
+            val body1=response1.body().toString()
+            Log.d("HttpActivity","body:$body1")
         }catch (e: Exception) {
             Log.e("HttpActivity", "Error fetching music", e)
         }
@@ -146,6 +146,7 @@ class HttpsMusic : ComponentActivity() {
 
                 val id=musicObject.getInt("id")
                 Log.d("TQQ","id:$id")
+
                 val response1=service.getMusicUrl(id)
                 val body1=response1.body().toString()
                 val jsonObject1=JSONObject(body1)
@@ -171,9 +172,9 @@ class HttpsMusic : ComponentActivity() {
     }
 
     interface Http{
-        @GET("/playlist/track/all?id=24381616&limit=20&offset=10")
+        @GET("/playlist/track/all?id=24381616&limit=10&offset=10")
         suspend fun getMusic(): Response<JsonObject>
-        @GET("song/url/v1")
+        @GET("song/url/")
         suspend fun getMusicUrl(@Query("id") id: Int):Response<JsonObject>
         @GET("/search")
         suspend fun getMusicKey(@Query("keywords") keywords:String):Response<JsonObject>

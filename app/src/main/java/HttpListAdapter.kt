@@ -19,7 +19,7 @@ class HttpListAdapter(val musicList: List<Song>, context: Context): RecyclerView
 
     inner class ViewHolder(view: View): RecyclerView.ViewHolder(view){
         val musicName: TextView =view.findViewById(R.id.httpMusicName)
-        val artistName1: TextView =view.findViewById(R.id.artistName2)
+        val artistName2: TextView =view.findViewById(R.id.artistName2)
 
         val playButton2: Button =view.findViewById(R.id.play_button2)
         init {
@@ -82,7 +82,7 @@ class HttpListAdapter(val musicList: List<Song>, context: Context): RecyclerView
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val music=musicList[position]
         holder.musicName.text=music.name
-        holder.artistName1.text=music.artist
+        holder.artistName2.text=music.artist
         holder.playButton2.setBackgroundResource(R.drawable.ic_play)
 
         val isCollected=sharedPreferences.getBoolean("isCollected_${music.id}",false)
