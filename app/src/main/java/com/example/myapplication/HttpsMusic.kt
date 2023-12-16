@@ -61,7 +61,7 @@ class HttpsMusic : ComponentActivity() {
         search2.setOnClickListener {
             CoroutineScope(Dispatchers.IO).launch {
                 try {
-                    val musicList=getMusic1()
+                    val musicList=getHttpMusic1()
                 }catch (e:Exception){
                     //处理异常
                 }
@@ -69,7 +69,8 @@ class HttpsMusic : ComponentActivity() {
         }
     }
 
-    private suspend fun getMusic1(){
+    private suspend fun getHttpMusic1():ArrayList<Song>{
+        val musicList= ArrayList<Song>()
         val loggingInterceptor=HttpLoggingInterceptor().apply {
             level=HttpLoggingInterceptor.Level.BODY
         }
@@ -92,12 +93,69 @@ class HttpsMusic : ComponentActivity() {
         musicSearch=findViewById(R.id.MusicSearch)
         val keywords=musicSearch.text.toString()
         try {
-            val response1=service1.getMusicKey(keywords)
-            val body1=response1.body().toString()
-            Log.d("HttpActivity","body:$body1")
+            val response2=service1.getMusicKey(keywords)
+            val body2=response2.body().toString()
+            Log.d("HttpActivity","body:$body2")
+
+            val jsonObject = JSONObject(body2)
+            Log.d("MFG", jsonObject.toString())
+            val songName = jsonObject.getJSONObject("result")
+                .getJSONArray("new_mlog")
+                .getJSONObject(0)
+                .getJSONObject("baseInfo")
+                .getJSONObject("resource")
+                .getJSONObject("mlogExtVO")
+                .getJSONObject("song")
+                .getString("name")
+            Log.d("WQE","songName:$songName")
+
+            val songId = jsonObject.getJSONObject("result")
+                .getJSONArray("new_mlog")
+                .getJSONObject(0)
+                .getJSONObject("baseInfo")
+                .getJSONObject("resource")
+                .getJSONObject("mlogExtVO")
+                .getJSONObject("song")
+                .getInt("id")
+            Log.d("BNM","songId:$songId")
+
+            val response3=service1.getMusicUrl(songId)
+            val body3=response3.body().toString()
+            val jsonObject1=JSONObject(body3)
+            val urlArray=jsonObject1.getJSONArray("data")
+            val urlObject=urlArray.getJSONObject(0)
+            val url=urlObject.getString("url")
+            Log.d("TNM","url:$url")
+
+            val durationInMilliseconds=jsonObject.getJSONObject("result")
+                .getJSONArray("new_mlog")
+                .getJSONObject(0)
+                .getJSONObject("baseInfo")
+                .getJSONObject("resource")
+                .getJSONObject("mlogExtVO")
+                .getJSONObject("song")
+                .getInt("duration")
+            val duration=durationInMilliseconds/1000
+            Log.d("KHG","duration:$duration")
+
+            val artistName = jsonObject.getJSONObject("result")
+                .getJSONArray("new_mlog")
+                .getJSONObject(0)
+                .getJSONObject("baseInfo")
+                .getJSONObject("resource")
+                .getJSONObject("mlogExtVO")
+                .getJSONObject("song")
+                .getJSONArray("artists")
+                .getJSONObject(0)
+                .getString("artistName")
+            Log.d("JKL","artistName:$artistName")
+
+            val music=Song(songName,artistName,songId,duration,0,"",url,0,false)
+            musicList.add(music)
         }catch (e: Exception) {
             Log.e("HttpActivity", "Error fetching music", e)
         }
+        return musicList
     }
 
     private suspend fun getHttpMusic():ArrayList<Song>{
