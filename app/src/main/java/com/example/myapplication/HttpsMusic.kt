@@ -62,6 +62,12 @@ class HttpsMusic : ComponentActivity() {
             CoroutineScope(Dispatchers.IO).launch {
                 try {
                     val musicList=getHttpMusic1()
+                    withContext(Dispatchers.Main) {
+                        val layoutManager = LinearLayoutManager(this@HttpsMusic)
+                        httpListView.layoutManager = layoutManager
+                        val adapter = HttpListAdapter(musicList, this@HttpsMusic)
+                        httpListView.adapter = adapter
+                    }
                 }catch (e:Exception){
                     //处理异常
                 }
@@ -98,60 +104,36 @@ class HttpsMusic : ComponentActivity() {
             Log.d("HttpActivity","body:$body2")
 
             val jsonObject = JSONObject(body2)
-            Log.d("MFG", jsonObject.toString())
-            val songName = jsonObject.getJSONObject("result")
-                .getJSONArray("new_mlog")
-                .getJSONObject(0)
-                .getJSONObject("baseInfo")
-                .getJSONObject("resource")
-                .getJSONObject("mlogExtVO")
-                .getJSONObject("song")
-                .getString("name")
-            Log.d("WQE","songName:$songName")
+            val songs = jsonObject.getJSONObject("result").getJSONArray("songs")
 
-            val songId = jsonObject.getJSONObject("result")
-                .getJSONArray("new_mlog")
-                .getJSONObject(0)
-                .getJSONObject("baseInfo")
-                .getJSONObject("resource")
-                .getJSONObject("mlogExtVO")
-                .getJSONObject("song")
-                .getInt("id")
-            Log.d("BNM","songId:$songId")
+            for (i in 0 until songs.length()) {
+                val song = songs.getJSONObject(i)
+                val songName = song.getString("name")
 
-            val response3=service1.getMusicUrl(songId)
-            val body3=response3.body().toString()
-            val jsonObject1=JSONObject(body3)
-            val urlArray=jsonObject1.getJSONArray("data")
-            val urlObject=urlArray.getJSONObject(0)
-            val url=urlObject.getString("url")
-            Log.d("TNM","url:$url")
+                val songId = song.getInt("id")
+                val response1=service1.getMusicUrl(songId)
+                val body1=response1.body().toString()
+                val jsonObject1=JSONObject(body1)
+                val urlArray=jsonObject1.getJSONArray("data")
+                val urlObject=urlArray.getJSONObject(0)
+                val url=urlObject.getString("url")
 
-            val durationInMilliseconds=jsonObject.getJSONObject("result")
-                .getJSONArray("new_mlog")
-                .getJSONObject(0)
-                .getJSONObject("baseInfo")
-                .getJSONObject("resource")
-                .getJSONObject("mlogExtVO")
-                .getJSONObject("song")
-                .getInt("duration")
-            val duration=durationInMilliseconds/1000
-            Log.d("KHG","duration:$duration")
+                val durationInMilliseconds = song.getInt("duration")
+                val duration=durationInMilliseconds/1000
 
-            val artistName = jsonObject.getJSONObject("result")
-                .getJSONArray("new_mlog")
-                .getJSONObject(0)
-                .getJSONObject("baseInfo")
-                .getJSONObject("resource")
-                .getJSONObject("mlogExtVO")
-                .getJSONObject("song")
-                .getJSONArray("artists")
-                .getJSONObject(0)
-                .getString("artistName")
-            Log.d("JKL","artistName:$artistName")
+                val artists = song.getJSONArray("artists")
+                var artistNames :String?= null
+                if(artists.length() > 0){
+                    val artistsObject=artists.getJSONObject(0)
+                    artistNames=artistsObject.getString("name")
+                }
 
-            val music=Song(songName,artistName,songId,duration,0,"",url,0,false)
-            musicList.add(music)
+                if(artistNames!=null){
+                    val music=Song(songName,artistNames,songId,duration,0,"",url,0,false)
+                    musicList.add(music)
+                }
+            }
+
         }catch (e: Exception) {
             Log.e("HttpActivity", "Error fetching music", e)
         }
