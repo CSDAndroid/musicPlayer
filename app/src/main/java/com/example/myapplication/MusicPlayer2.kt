@@ -77,7 +77,7 @@ class MusicPlayer2 : ComponentActivity() {
             editor.apply()
         }
 
-        ivMusic.setImageResource(R.mipmap.ic_launcher_1_foreground)
+        ivMusic.setImageResource(R.mipmap.ic_launcher_1_round)
         val rotateAnimator=RotateAnimation(0f,360f,
             Animation.RELATIVE_TO_SELF,0.5f,
             Animation.RELATIVE_TO_SELF,0.5f)
@@ -127,6 +127,13 @@ class MusicPlayer2 : ComponentActivity() {
         }
 
         prev?.setOnClickListener {
+            musicControl!!.pause()
+            play.setBackgroundResource(R.drawable.ic_play)
+            val editor=sharedPreferences.edit()
+            editor.putBoolean("isPlaying_${songList!![position!!].id}",false)
+            editor.putBoolean("i_${songList!![position!!].id}",false)
+            editor.apply()
+            ivMusic.clearAnimation()
             if(position!=null&&songList!=null) {
                 if (position == 0) {
                         name!!.text = songList!![position!!].name
@@ -138,6 +145,13 @@ class MusicPlayer2 : ComponentActivity() {
         }
 
         next?.setOnClickListener {
+            musicControl!!.pause()
+            play.setBackgroundResource(R.drawable.ic_play)
+            val editor=sharedPreferences.edit()
+            editor.putBoolean("isPlaying_${songList!![position!!].id}",false)
+            editor.putBoolean("i_${songList!![position!!].id}",false)
+            editor.apply()
+            ivMusic.clearAnimation()
             if(position!=null&&songList!=null) {
                 if (position == songList!!.size-1) {
                     position = 0

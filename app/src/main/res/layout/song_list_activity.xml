@@ -3,7 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".SongListActivity">
+    tools:context=".SongListActivity"
+    android:background="@drawable/null4b7ed771e6d475b9">
 
     <LinearLayout
         android:id="@+id/LinearLayout"
@@ -16,7 +17,8 @@
             android:layout_width="25dp"
             android:layout_height="wrap_content"
             android:layout_weight="10"
-            android:drawableStart="@drawable/ic_arrow" />
+            android:drawableStart="@drawable/ic_arrow"
+            android:background="@android:color/transparent"/>
 
         <EditText
             android:id="@+id/SongSearch"
@@ -33,7 +35,8 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="20"
-            android:text="搜索"/>
+            android:text="搜索"
+            android:background="@android:color/transparent"/>
 
     </LinearLayout>
 

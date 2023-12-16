@@ -3,7 +3,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:gravity="center">
+    android:gravity="center"
+    android:background="@drawable/null4b7ed771e6d475b9">
 
     <ImageView
         android:id="@+id/iv_music"
@@ -11,7 +12,7 @@
         android:layout_height="150dp"
         android:layout_gravity="center_horizontal"
         android:layout_margin="15dp"
-        android:background="@mipmap/ic_launcher_1_foreground"/>
+        android:src="@mipmap/ic_launcher_1_round" />
 
     <TextView
         android:id="@+id/song_name"

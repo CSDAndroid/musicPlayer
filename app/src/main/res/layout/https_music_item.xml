@@ -1,7 +1,6 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:background="@color/white">
+    android:layout_height="wrap_content">
 
     <ImageView
         android:id="@+id/picture2"
@@ -16,7 +15,7 @@
         android:layout_marginTop="17dp"
         android:text="Song Name"
         android:textSize="10sp"
-        android:textColor="#023530"/>
+        android:textColor="#EAF1F0"/>
 
     <TextView
         android:id="@+id/artistName2"
@@ -27,7 +26,7 @@
         android:layout_marginTop="10dp"
         android:text="Artist Name"
         android:textSize="9sp"
-        android:textColor="#02322D"/>
+        android:textColor="#EAF1F0"/>
 
     <Button
         android:id="@+id/play_button2"
