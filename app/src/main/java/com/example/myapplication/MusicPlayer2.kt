@@ -61,6 +61,7 @@ class MusicPlayer2 : ComponentActivity() {
     }
 
     private fun init() {
+        //绑定控件
         val sb=findViewById<SeekBar>(R.id.sb)
         val play=findViewById<Button>(R.id.play)
         val prev=findViewById<Button>(R.id.prev)
@@ -69,6 +70,7 @@ class MusicPlayer2 : ComponentActivity() {
         val ivMusic=findViewById<ImageView>(R.id.iv_music)
         val sharedPreferences = getSharedPreferences("isPlaying", MODE_PRIVATE)
 
+        //设置初始状态
         if(position!=null&&songList!=null){
             name!!.text= songList!![position!!].name
             play.setBackgroundResource(R.drawable.ic_play)
@@ -77,6 +79,7 @@ class MusicPlayer2 : ComponentActivity() {
             editor.apply()
         }
 
+        //动画
         ivMusic.setImageResource(R.mipmap.ic_launcher_1_round)
         val rotateAnimator=RotateAnimation(0f,360f,
             Animation.RELATIVE_TO_SELF,0.5f,
@@ -84,6 +87,7 @@ class MusicPlayer2 : ComponentActivity() {
         rotateAnimator.duration=10000
         rotateAnimator.repeatCount=Animation.INFINITE
 
+        //进度条的移动和动画的停止
         sb?.setOnSeekBarChangeListener(object :
             SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(p0: SeekBar?, p1: Int, p2: Boolean) {
@@ -98,6 +102,7 @@ class MusicPlayer2 : ComponentActivity() {
             }
         })
 
+        //播放点击事件
         play?.setOnClickListener {
             if (position != null&&songList!=null) {
                 val i=sharedPreferences.getBoolean("i_${songList!![position!!].id}",false)
@@ -164,6 +169,7 @@ class MusicPlayer2 : ComponentActivity() {
         }
     }
 
+    //进度条更新
     companion object{
         var handler: Handler?=null
     }
@@ -190,6 +196,7 @@ class MusicPlayer2 : ComponentActivity() {
         }
     }
 
+    //解绑
     override fun onDestroy() {
         super.onDestroy()
         unbind()

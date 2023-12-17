@@ -53,7 +53,7 @@ class HttpsMusic : ComponentActivity() {
                     httpListView.adapter = adapter
                 }
             } catch (e: Exception) {
-                // 处理异常
+                //其他东西
             }
         }
 
@@ -77,10 +77,12 @@ class HttpsMusic : ComponentActivity() {
 
     private suspend fun getHttpMusic1():ArrayList<Song>{
         val musicList= ArrayList<Song>()
+        //拦截器
         val loggingInterceptor=HttpLoggingInterceptor().apply {
             level=HttpLoggingInterceptor.Level.BODY
         }
 
+        //创建客户端实例
         val client=OkHttpClient.Builder()
             .connectTimeout(3000L,TimeUnit.MILLISECONDS)
             .writeTimeout(10,TimeUnit.SECONDS)
@@ -88,10 +90,11 @@ class HttpsMusic : ComponentActivity() {
             .addInterceptor(loggingInterceptor)
             .build()
 
+        //创建retrofit实例
         val retrofit=Retrofit.Builder()
             .baseUrl("http://8.222.172.78:3000/")
             .client(client)
-            .addConverterFactory(GsonConverterFactory.create())
+            .addConverterFactory(GsonConverterFactory.create())//Gson转换器
             .build()
 
         val service1=retrofit.create(Http::class.java)
@@ -211,6 +214,7 @@ class HttpsMusic : ComponentActivity() {
         return musicList
     }
 
+    //定义一个接口
     interface Http{
         @GET("/playlist/track/all?id=24381616&limit=10&offset=10")
         suspend fun getMusic(): Response<JsonObject>

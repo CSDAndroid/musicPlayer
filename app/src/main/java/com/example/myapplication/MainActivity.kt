@@ -17,9 +17,11 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.main_activity)
 
+        //检查权限是否被处理
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED ||
             ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED
             ) {
+            //请求权限
             ActivityCompat.requestPermissions(
                 this,
                 arrayOf(
@@ -34,6 +36,7 @@ class MainActivity : ComponentActivity() {
         }
     }
 
+    //处理权限请求结果
     @Deprecated("This method is deprecated",ReplaceWith("newMethod"))
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)

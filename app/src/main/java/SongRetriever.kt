@@ -6,7 +6,7 @@ class SongRetriever(private val contentResolver: ContentResolver){
 
     fun retrieveSong(): List<Song> {
         val songList= mutableListOf<Song>()
-        val songUri= MediaStore.Audio.Media.getContentUri(MediaStore.VOLUME_EXTERNAL)
+        val songUri= MediaStore.Audio.Media.getContentUri(MediaStore.VOLUME_EXTERNAL)//使用MediaStore.Audio.Media.getContentUri方法获取音乐媒体库的URI
         val projection= arrayOf(
             MediaStore.Audio.Media._ID,
             MediaStore.Audio.Media.DISPLAY_NAME,

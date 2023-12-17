@@ -38,6 +38,7 @@ class MusicListActivity : ComponentActivity() {
         val dbHelper=MusicDatabase(this)
         val db=dbHelper.writableDatabase
 
+        //使用数据库的query方法查询数据库中的音乐信息
         val cursor=db.query(
             MusicDatabase.TABLE_NAME,
             arrayOf(MusicDatabase.COLUMN_NAME,MusicDatabase.COLUMN_ID,MusicDatabase.COLUMN_ARTIST,MusicDatabase.COLUMN_DURATION,MusicDatabase.COLUMN_DATA,MusicDatabase.COLUMN_MIMETYPE,MusicDatabase.COLUMN_SIZE,MusicDatabase.COLUMN_ALBUM_ID),
@@ -48,6 +49,7 @@ class MusicListActivity : ComponentActivity() {
             null,
             null)
 
+        //通过遍历游标(cursor)的方式，将查询到的音乐信息提取出来，并封装成Song对象，添加到musicList中
         while(cursor.moveToNext()){
             val id=cursor.getInt(cursor.getColumnIndexOrThrow(MusicDatabase.COLUMN_ID))
             val name=cursor.getString(cursor.getColumnIndexOrThrow(MusicDatabase.COLUMN_NAME))
