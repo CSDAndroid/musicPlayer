@@ -94,6 +94,7 @@ class SongListAdapter(val songList: List<Song>, context: Context): RecyclerView.
 
     override fun getItemCount()=songList.size
 
+    //单例类,储存音乐列表和位置
     object MusicData{
         var currentSongList: List<Song>?=null
         var currentPosition:Int?=null

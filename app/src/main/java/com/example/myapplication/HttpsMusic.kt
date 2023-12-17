@@ -162,6 +162,7 @@ class HttpsMusic : ComponentActivity() {
             .addConverterFactory(GsonConverterFactory.create())
             .build()
 
+        //创建一个retrofit服务接口
         val service=retrofit.create(Http::class.java)
 
         try {

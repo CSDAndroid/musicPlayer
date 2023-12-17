@@ -20,6 +20,7 @@ class SongRetriever(private val contentResolver: ContentResolver){
         val selection="${MediaStore.Audio.Media.IS_MUSIC}!=0"
         val sortOrder="${MediaStore.Audio.Media.DISPLAY_NAME} ASC"
 
+        //query查询音乐数据
         contentResolver.query(songUri,projection,selection,null,sortOrder)?.use { cursor->
             val idColumn=cursor.getColumnIndexOrThrow(MediaStore.Audio.Media._ID)
             val titleColumn=cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.DISPLAY_NAME)
@@ -30,6 +31,7 @@ class SongRetriever(private val contentResolver: ContentResolver){
             val albumIdColumn=cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.ALBUM_ID)
             val dataColumn=cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.DATA)
 
+            //遍历cursor,将获取到的音乐名称,id等数据提取出来
             while(cursor.moveToNext()){
                 val id=cursor.getInt(idColumn)
                 val title=cursor.getString(titleColumn)

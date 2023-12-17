@@ -38,10 +38,12 @@ class MusicPlayer2 : ComponentActivity() {
         bind()
     }
 
+    //绑定服务
     private fun bind(){
         intent=Intent(this,MusicPlayerService::class.java)
         bindService(intent,serviceConnection, BIND_AUTO_CREATE)
     }
+    //解绑服务
     private fun unbind(){
        if(isUnbind){
            return
@@ -51,6 +53,7 @@ class MusicPlayer2 : ComponentActivity() {
         isUnbind=true
     }
 
+    //服务的链接和断链
     private val serviceConnection = object : ServiceConnection {
         override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
             musicControl = service as MusicPlayerService.MusicControl
