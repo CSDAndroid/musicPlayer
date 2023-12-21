@@ -1,7 +1,7 @@
 package com.example.myapplication
 
-import HttpListAdapter
 import Song
+import SongListAdapter
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -49,7 +49,7 @@ class HttpsMusic : ComponentActivity() {
                 withContext(Dispatchers.Main) {
                     val layoutManager = LinearLayoutManager(this@HttpsMusic)
                     httpListView.layoutManager = layoutManager
-                    val adapter = HttpListAdapter(musicList,this@HttpsMusic)
+                    val adapter = SongListAdapter(musicList,this@HttpsMusic)
                     httpListView.adapter = adapter
                 }
             } catch (e: Exception) {
@@ -65,7 +65,7 @@ class HttpsMusic : ComponentActivity() {
                     withContext(Dispatchers.Main) {
                         val layoutManager = LinearLayoutManager(this@HttpsMusic)
                         httpListView.layoutManager = layoutManager
-                        val adapter = HttpListAdapter(musicList, this@HttpsMusic)
+                        val adapter = SongListAdapter(musicList, this@HttpsMusic)
                         httpListView.adapter = adapter
                     }
                 }catch (e:Exception){
@@ -77,34 +77,14 @@ class HttpsMusic : ComponentActivity() {
 
     private suspend fun getHttpMusic1():ArrayList<Song>{
         val musicList= ArrayList<Song>()
-        //拦截器
-        val loggingInterceptor=HttpLoggingInterceptor().apply {
-            level=HttpLoggingInterceptor.Level.BODY
-        }
-
-        //创建客户端实例
-        val client=OkHttpClient.Builder()
-            .connectTimeout(3000L,TimeUnit.MILLISECONDS)
-            .writeTimeout(10,TimeUnit.SECONDS)
-            .retryOnConnectionFailure(true)
-            .addInterceptor(loggingInterceptor)
-            .build()
-
-        //创建retrofit实例
-        val retrofit=Retrofit.Builder()
-            .baseUrl("http://8.222.172.78:3000/")
-            .client(client)
-            .addConverterFactory(GsonConverterFactory.create())//Gson转换器
-            .build()
-
-        val service1=retrofit.create(Http::class.java)
+        val address="http://8.222.172.78:3000/"
+        val service1=HttpUtil.sendHttp(address,Http::class.java)
 
         musicSearch=findViewById(R.id.MusicSearch)
         val keywords=musicSearch.text.toString()
         try {
             val response2=service1.getMusicKey(keywords)
             val body2=response2.body().toString()
-            Log.d("HttpActivity","body:$body2")
 
             val jsonObject = JSONObject(body2)
             val songs = jsonObject.getJSONObject("result").getJSONArray("songs")
@@ -130,13 +110,11 @@ class HttpsMusic : ComponentActivity() {
                     val artistsObject=artists.getJSONObject(0)
                     artistNames=artistsObject.getString("name")
                 }
-
                 if(artistNames!=null){
                     val music=Song(songName,artistNames,songId,duration,0,"",url,0,false)
                     musicList.add(music)
                 }
             }
-
         }catch (e: Exception) {
             Log.e("HttpActivity", "Error fetching music", e)
         }
@@ -145,39 +123,19 @@ class HttpsMusic : ComponentActivity() {
 
     private suspend fun getHttpMusic():ArrayList<Song>{
         val musicList= ArrayList<Song>()
-        val loggingInterceptor=HttpLoggingInterceptor().apply {
-            level=HttpLoggingInterceptor.Level.BODY
-        }
-
-        val client=OkHttpClient.Builder()
-            .connectTimeout(3000L,TimeUnit.MILLISECONDS)
-            .writeTimeout(10,TimeUnit.SECONDS)
-            .retryOnConnectionFailure(true)
-            .addInterceptor(loggingInterceptor)
-            .build()
-
-        val retrofit=Retrofit.Builder()
-            .baseUrl("http://8.222.172.78:3000/")
-            .client(client)
-            .addConverterFactory(GsonConverterFactory.create())
-            .build()
-
-        //创建一个retrofit服务接口
-        val service=retrofit.create(Http::class.java)
+        val address="http://8.222.172.78:3000/"
+        val service=HttpUtil.sendHttp(address,Http::class.java)
 
         try {
             val response= service.getMusic()
             val body=response.body().toString()
-            Log.d("MainActivity", "onCreate:$body")
 
             val jsonObject= JSONObject(body)
             val musicsArray=jsonObject.getJSONArray("songs")
             for(i in 0 until musicsArray.length()) {
                 val musicObject = musicsArray.getJSONObject(i)
-
                 val name = musicObject.getString("name")
                 Log.d("TUU", "name:$name")
-
 
                 val artistsArray = musicObject.getJSONArray("ar")
                 var artist:String?=null
@@ -187,6 +145,9 @@ class HttpsMusic : ComponentActivity() {
                 }
                 Log.d("TRE", "artistNames:$artist")
 
+                val durationInMilliseconds = musicObject.getInt("dt")
+                val duration = durationInMilliseconds / 1000
+                Log.d("TGV", "duration:$duration")
 
                 val id=musicObject.getInt("id")
                 Log.d("TQQ","id:$id")
@@ -198,11 +159,6 @@ class HttpsMusic : ComponentActivity() {
                 val urlObject=urlArray.getJSONObject(0)
                 val url=urlObject.getString("url")
                 Log.d("TNM","url:$url")
-
-
-                val durationInMilliseconds = musicObject.getInt("dt")
-                val duration = durationInMilliseconds / 1000
-                Log.d("TGV", "duration:$duration")
 
                 if(artist!=null){
                     val music=Song(name,artist,id,duration,0,"",url,0,false)
@@ -223,5 +179,33 @@ class HttpsMusic : ComponentActivity() {
         suspend fun getMusicUrl(@Query("id") id: Int):Response<JsonObject>
         @GET("/search")
         suspend fun getMusicKey(@Query("keywords") keywords:String):Response<JsonObject>
+    }
+}
+
+//定义一个单例类,用于重复使用
+object HttpUtil{
+    fun <T:Any>sendHttp(address: String,serviceClass: Class<T>): T {
+        //拦截器
+        val loggingInterceptor=HttpLoggingInterceptor().apply {
+            level=HttpLoggingInterceptor.Level.BODY
+        }
+
+        //创建客户端实例
+        val client=OkHttpClient.Builder()
+            .connectTimeout(300L,TimeUnit.MILLISECONDS)
+            .writeTimeout(1,TimeUnit.SECONDS)
+            .retryOnConnectionFailure(true)
+            .addInterceptor(loggingInterceptor)
+            .build()
+
+        //创建retrofit实例
+        val retrofit=Retrofit.Builder()
+            .baseUrl(address)
+            .client(client)
+            .addConverterFactory(GsonConverterFactory.create())//Gson转换器
+            .build()
+
+        //创建一个retrofit服务接口
+        return retrofit.create(serviceClass)
     }
 }

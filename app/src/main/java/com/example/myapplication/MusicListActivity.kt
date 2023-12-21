@@ -1,8 +1,8 @@
 package com.example.myapplication
 
 import MusicDatabase
-import MusicListAdapter
 import Song
+import SongListAdapter
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
@@ -29,7 +29,7 @@ class MusicListActivity : ComponentActivity() {
 
         val layoutManager = LinearLayoutManager(this)
         musicListView.layoutManager = layoutManager
-        val adapter = MusicListAdapter(musicList,this)
+        val adapter = SongListAdapter(musicList,this)
         musicListView.adapter = adapter
     }
 
