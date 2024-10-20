@@ -3,8 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".SongListActivity"
-    android:background="@drawable/null4b7ed771e6d475b9">
+    android:background="@drawable/null4b7ed771e6d475b9"
+    tools:context=".SongListActivity">
 
     <LinearLayout
         android:id="@+id/LinearLayout1"
@@ -17,27 +17,26 @@
             android:layout_width="25dp"
             android:layout_height="wrap_content"
             android:layout_weight="10"
-            android:drawableStart="@drawable/ic_arrow"
-            android:background="@android:color/transparent"/>
+            android:background="@android:color/transparent"
+            android:drawableStart="@drawable/ic_arrow" />
 
         <EditText
             android:id="@+id/MusicSearch"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:textSize="15sp"
             android:layout_weight="100"
             android:background="@drawable/search_box"
             android:drawableStart="@drawable/search"
             android:hint="歌曲"
-            />
+            android:textSize="15sp" />
 
         <Button
             android:id="@+id/search1"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="20"
-            android:text="搜索"
-            android:background="@android:color/transparent" />
+            android:background="@android:color/transparent"
+            android:text="搜索" />
 
     </LinearLayout>
 
@@ -45,5 +44,5 @@
         android:id="@+id/MusicListView"
         android:layout_width="match_parent"
         android:layout_height="750dp"
-        android:layout_below="@id/LinearLayout1"/>
+        android:layout_below="@id/LinearLayout1" />
 </RelativeLayout>

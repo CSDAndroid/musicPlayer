@@ -1,28 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:orientation="horizontal"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity"
-    android:background="@drawable/null4b7ed771e6d475b9">
+    android:background="@drawable/null4b7ed771e6d475b9"
+    android:orientation="horizontal"
+    tools:context=".MainActivity">
 
     <Button
         android:id="@+id/user"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="用户名"
         android:background="@android:color/transparent"
-        android:drawableStart="@mipmap/ic_launcher_round"/>
+        android:drawableStart="@mipmap/ic_launcher_round"
+        android:text="用户名" />
 
     <Button
         android:id="@+id/Like"
         android:layout_width="wrap_content"
         android:layout_height="125dp"
-        android:text="我喜欢的"
-        android:drawableStart="@drawable/heart"
         android:layout_below="@id/user"
-        />
+        android:drawableStart="@drawable/heart"
+        android:text="我喜欢的" />
 
     <Button
         android:id="@+id/recent"
@@ -30,7 +29,7 @@
         android:layout_height="60dp"
         android:layout_alignTop="@id/Like"
         android:layout_toEndOf="@+id/Like"
-        android:text="最近"/>
+        android:text="最近" />
 
     <Button
         android:id="@+id/local"
@@ -39,7 +38,7 @@
         android:layout_alignTop="@id/recent"
         android:layout_alignParentEnd="true"
         android:layout_toEndOf="@id/recent"
-        android:text="本地"/>
+        android:text="本地" />
 
     <Button
         android:id="@+id/all"
@@ -49,5 +48,5 @@
         android:layout_alignBottom="@+id/Like"
         android:layout_alignParentEnd="true"
         android:layout_toEndOf="@id/Like"
-        android:text="云端"/>
+        android:text="云端" />
 </RelativeLayout>

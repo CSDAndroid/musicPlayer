@@ -17,7 +17,7 @@ class MusicDatabase(context: Context) :
         const val COLUMN_DATA = "data"
         const val COLUMN_MIMETYPE = "mimeType"
         const val COLUMN_SIZE = "size"
-        const val COLUMN_ALBUM_ID="albumId"
+        const val COLUMN_ALBUM_ID = "albumId"
     }
 
     override fun onCreate(db: SQLiteDatabase) {
