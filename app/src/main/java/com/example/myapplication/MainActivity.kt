@@ -42,7 +42,9 @@ class MainActivity : ComponentActivity() {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         when (requestCode) {
             REQUEST_CODE -> {
-                if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED&&grantResults[1] == PackageManager.PERMISSION_GRANTED) {
+                if (grantResults.isNotEmpty() && grantResults[0]
+                    == PackageManager.PERMISSION_GRANTED&&grantResults[1]
+                    == PackageManager.PERMISSION_GRANTED) {
                     initialize()
                 } else {
                     finish()
