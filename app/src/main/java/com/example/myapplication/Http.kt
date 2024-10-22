@@ -1,4 +1,4 @@
-package com.example.myapplication.ui.theme
+package com.example.myapplication
 
 import com.google.gson.JsonObject
 import retrofit2.Response
