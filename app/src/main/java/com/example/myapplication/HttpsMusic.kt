@@ -10,15 +10,12 @@ import android.widget.EditText
 import androidx.activity.ComponentActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.google.gson.JsonObject
+import com.example.myapplication.ui.theme.Http
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.json.JSONObject
-import retrofit2.Response
-import retrofit2.http.GET
-import retrofit2.http.Query
 
 class HttpsMusic : ComponentActivity() {
     private lateinit var httpListView: RecyclerView
@@ -164,17 +161,5 @@ class HttpsMusic : ComponentActivity() {
             Log.e("MainActivity", "Error fetching music", e)
         }
         return musicList
-    }
-
-    //定义一个接口
-    interface Http {
-        @GET("/playlist/track/all?id=24381616&limit=10&offset=10")
-        suspend fun getMusic(): Response<JsonObject>
-
-        @GET("song/url/")
-        suspend fun getMusicUrl(@Query("id") id: Int): Response<JsonObject>
-
-        @GET("/search")
-        suspend fun getMusicKey(@Query("keywords") keywords: String): Response<JsonObject>
     }
 }
